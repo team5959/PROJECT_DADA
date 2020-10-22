@@ -1,13 +1,13 @@
-package com.project.piary;
+package com.dada;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PiaryApplication {
+public class DadaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PiaryApplication.class, args);
+		SpringApplication.run(DadaApplication.class, args);
 	}
 
 }

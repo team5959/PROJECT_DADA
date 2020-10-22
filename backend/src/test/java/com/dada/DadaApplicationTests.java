@@ -1,10 +1,10 @@
-package com.project.piary;
+package com.dada;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PiaryApplicationTests {
+class DadaApplicationTests {
 
 	@Test
 	void contextLoads() {

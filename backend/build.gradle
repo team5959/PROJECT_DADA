@@ -4,8 +4,8 @@ plugins {
 	id 'java'
 }
 
-group = 'com.project'
-version = '0.0.1-SNAPSHOT'
+group = 'com.dada'
+version = '0.0.1'
 sourceCompatibility = '11'
 
 configurations {
