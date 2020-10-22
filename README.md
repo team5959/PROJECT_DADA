@@ -1,7 +1,7 @@
 # DADA
 ## Daily Auto Diary Application
 
-> 사진의 메타데이터를 이용한 자동 피드 작성 서비스
+### 사진의 메타데이터를 이용한 자동 피드 작성 서비스
 
 ## Target User
 - 다이어리 쓰기 귀찮은 사람
