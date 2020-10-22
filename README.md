@@ -1,5 +1,5 @@
 # DADA
-Daily Auto Diary Application
+## Daily Auto Diary Application
 
 > 사진의 메타데이터를 이용한 자동 피드 작성 서비스
 
