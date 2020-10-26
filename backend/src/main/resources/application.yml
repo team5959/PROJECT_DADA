@@ -1,0 +1,21 @@
+# Server setting
+server:
+  servlet:
+    context-path: /
+
+spring:
+  data:
+    #  mongodb settings (local)
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      database: dada
+      username: root
+      password: root
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri:
+          jwk-set-uri:
