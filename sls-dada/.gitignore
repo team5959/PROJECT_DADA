@@ -7,4 +7,5 @@ jspm_packages
 
 # IDE
 .idea
+.build
 .vscode
