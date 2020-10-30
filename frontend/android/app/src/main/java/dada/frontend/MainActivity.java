@@ -1,4 +1,4 @@
-package com.frontend;
+package dada.frontend;
 
 import com.facebook.react.ReactActivity;
 
