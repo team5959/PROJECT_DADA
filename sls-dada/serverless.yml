@@ -24,3 +24,12 @@ provider:
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
       Resource: "*"
+
+functions:
+  getPeedList:
+    handler: peed/list.list
+    events:
+      - http:
+          path: users/{user}/peeds/of/{date}
+          method: get
+          cors: true
