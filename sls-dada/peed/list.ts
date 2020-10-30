@@ -6,16 +6,19 @@ const dynamoDb = new DynamoDB.DocumentClient();
 
 module.exports.list = (event, context, callback) => {
     const params = {
-        TableName: 'Peed',
+        TableName: 'peed',
         ExpressionAttributeNames: {
-            '#user': 'User',
-            '#date': 'Date',
+            '#user': 'user',
+            '#date': 'date',
+            '#location': 'location',
         },
         ExpressionAttributeValues: {
             ':user': event.pathParameters.user,
             ':date': event.pathParameters.date,
         },
-        KeyConditionExpression: '#user = :user AND begins_with(#date, :date)'
+        KeyConditionExpression: '#user = :user AND begins_with(#date, :date)',
+        ProjectionExpression: 'id, #date, #location, title, tags, repPhoto',
+        Select: 'SPECIFIC_ATTRIBUTES'
     };
 
     dynamoDb.query(params, (error, result) => {
@@ -29,7 +32,6 @@ module.exports.list = (event, context, callback) => {
             return;
         }
 
-        // create a response
         const response = {
             statusCode: 200,
             body: JSON.stringify(result.Items),
