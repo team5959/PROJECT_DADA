@@ -1,4 +1,4 @@
-package com.frontend;
+package dada.frontend;
 
 import android.app.Application;
 import android.content.Context;
