@@ -5,7 +5,9 @@
   "scripts": {
     "lint": "tslint '*.ts'"
   },
-  "dependencies": {},
+  "dependencies": {
+    "uuid": "^8.3.1"
+  },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.64",
     "@types/aws-sdk": "^2.7.0",

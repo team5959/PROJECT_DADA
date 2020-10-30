@@ -33,3 +33,10 @@ functions:
           path: users/{user}/peeds/of/{date}
           method: get
           cors: true
+  createPeed:
+    handler: peed/create.create
+    events:
+      - http:
+          path: users/{user}/peeds
+          method: post
+          cors: true
