@@ -6,7 +6,7 @@ const dynamoDb = new DynamoDB.DocumentClient();
 
 module.exports.list = (event, context, callback) => {
     const params = {
-        TableName: 'peed',
+        TableName: 'feed',
         ExpressionAttributeNames: {
             '#user': 'user',
             '#date': 'date',

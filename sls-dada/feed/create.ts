@@ -18,9 +18,8 @@ module.exports.create = (event, context, callback) => {
     delete data['photos'];
 
     const params = {
-        TableName: 'peed',
+        TableName: 'feed',
         Item: {
-            id: uuid.v4(),
             tags: tags,
             photos: photos,
             ...data,
