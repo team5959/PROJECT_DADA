@@ -1,11 +1,13 @@
 import 'react-native-gesture-handler';
 import React from 'react'
 import { Text, View, Button } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 
 
 const UserScreen = ({ route, navigation }) => {
     const { userIdx, userName, userLastName } = route.params; //전달받은 값(route)
-
+    console.log('route',route)
     return (
         <View style={{
             flex: 1,
