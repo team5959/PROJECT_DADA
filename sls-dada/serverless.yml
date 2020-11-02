@@ -1,0 +1,49 @@
+service: sls-dada
+
+app: dada
+org: dudung
+
+frameworkVersion: '2'
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:Query"
+        - "dynamodb:Scan"
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+      Resource: "*"
+
+functions:
+  getFeedList:
+    handler: feed/list.list
+    events:
+      - http:
+          path: users/{user}/feeds/of/{date}
+          method: get
+          cors: true
+  getFeed:
+    handler: feed/get.get
+    events:
+      - http:
+          path: users/{user}/feeds/{date}
+          method: get
+          cors: true
+  createFeed:
+    handler: feed/create.create
+    events:
+      - http:
+          path: users/{user}/feeds
+          method: post
+          cors: true
