@@ -1,6 +1,8 @@
 import 'react-native-gesture-handler';
 import React from 'react'
 import { Text, View, Button } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 
 
 const HomeScreen = ({ navigation }) => {
@@ -18,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
                     navigation.navigate('User', {
                         userIdx: 100,
                         userName: 'jong',
-                        userLastName: null,
+                        userLastName: 'kim',
                     })
                 }}
             />
