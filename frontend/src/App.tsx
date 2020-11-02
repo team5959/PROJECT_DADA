@@ -74,15 +74,19 @@ const App = () => {
 
 const styles = StyleSheet.create({
   content: {
+    flex: 3,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: "ivory"
   },
   footer: {
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: "skyblue"
   },
   body: {
-    backgroundColor: 'red'
+    flex: 1,
   },
   googleButton: {
     width: 380, 
