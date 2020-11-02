@@ -20,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
                     navigation.navigate('User', {
                         userIdx: 100,
                         userName: 'jong',
-                        userLastName: null,
+                        userLastName: 'kim',
                     })
                 }}
             />
