@@ -3,7 +3,7 @@ import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import HomeScreen from './Screens/home'
 import UserScreen from './Screens/user'
 
