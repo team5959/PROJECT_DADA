@@ -26,17 +26,17 @@ provider:
       Resource: "*"
 
 functions:
-  getPeedList:
-    handler: peed/list.list
+  getFeedList:
+    handler: feed/list.list
     events:
       - http:
-          path: users/{user}/peeds/of/{date}
+          path: users/{user}/feeds/of/{date}
           method: get
           cors: true
-  createPeed:
-    handler: peed/create.create
+  createFeed:
+    handler: feed/create.create
     events:
       - http:
-          path: users/{user}/peeds
+          path: users/{user}/feeds
           method: post
           cors: true
