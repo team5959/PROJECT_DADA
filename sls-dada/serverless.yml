@@ -47,3 +47,10 @@ functions:
           path: users/{user}/feeds
           method: post
           cors: true
+  updateFeed:
+    handler: feed/update.update
+    events:
+      - http:
+          path: users/{user}/feeds/{date}
+          method: put
+          cors: true
