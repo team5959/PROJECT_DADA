@@ -54,3 +54,10 @@ functions:
           path: users/{user}/feeds/{date}
           method: put
           cors: true
+  deleteFeed:
+    handler: feed/delete.delete
+    events:
+      - http:
+          path: users/{user}/feeds/{date}
+          method: delete
+          cors: true
