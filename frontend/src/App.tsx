@@ -31,6 +31,7 @@ const App = () => {
       setName(userInfo.user.name)
       setEmail(userInfo.user.email)
       setPhoto(userInfo.user.photo)
+      console.log(userInfo)
       console.log('name:', name)
       console.log('email:', email)
 

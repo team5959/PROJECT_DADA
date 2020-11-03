@@ -5,16 +5,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import HomeScreen from './Screens/home'
-import UserScreen from './Screens/user'
+import SearchScreen from './Screens/search'
 
 const Tab = createBottomTabNavigator();
 
 const main = () => {
   
   return (
-    // <View style={styles.title}>
-    //   <Text >메인 화면 왔어요</Text>
-    // </View>
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -23,10 +20,12 @@ const main = () => {
 
             if (route.name === 'Home') {
               iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline';
-            } else if (route.name === 'User') {
-              iconName = focused ? 'ios-list-box' : 'ios-list';
+                ? 'home-sharp'
+                : 'home-outline';
+            } else if (route.name === 'Search') {
+              iconName = focused 
+                ? 'md-search' 
+                : 'search-outline';
             }
 
             // You can return any component that you like here!
@@ -35,25 +34,19 @@ const main = () => {
         })}
         tabBarOptions={{
           activeBackgroundColor: 'skyblue',
-          activeTintColor: 'tomato',
+          activeTintColor: 'black',
           inactiveTintColor: 'grey',
-          
         }}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="User" component={UserScreen} />
+        <Tab.Screen name="Search" component={SearchScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   )
 }
 
 const styles = StyleSheet.create({
-  title: {
-    flex: 1,
-    backgroundColor: 'grey',
-    justifyContent: 'center', 
-    alignItems: 'center'
-  }
+  
 })
 
 
