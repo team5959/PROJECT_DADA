@@ -68,3 +68,10 @@ functions:
           path: users/{user}/feeds/{date}/photos/{photoIndex}
           method: put
           cors: true
+  DeletePhoto:
+    handler: photo/delete.delete
+    events:
+      - http:
+          path: users/{user}/feeds/{date}/photos/{photoIndex}
+          method: delete
+          cors: true
