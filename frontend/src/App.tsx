@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native'
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import MainScreen from './Components/main'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Value } from 'react-native-reanimated';
 
 const App = () => {
-  const [name, setName] = useState(null)
-  const [email, setEmail] = useState(null)
+  console.log('앱 시작했다.')
+  const [userInfo, setUserInfo] = useState(null)
   
   useEffect(() => {
     GoogleSignin.configure({
@@ -27,12 +27,7 @@ const App = () => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       // console.log(userInfo)					//👈콘솔로 로그인 정보 찍어보자
-      await setName(userInfo.user.name)
-      await setEmail(userInfo.user.email)
-      await console.log(userInfo)
-      await console.log('name:', name)
-      await console.log('email:', email)
-
+      setUserInfo(JSON.parse(JSON.stringify(userInfo)))
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -49,8 +44,8 @@ const App = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {name ? (
-        <MainScreen/>
+      {userInfo ? (
+        <MainScreen info={userInfo}/>
       ) : (
         <View style={styles.body}>
           <View style={styles.content}>
@@ -69,7 +64,6 @@ const App = () => {
     </View>
   )
 }
-
 
 const styles = StyleSheet.create({
   content: {

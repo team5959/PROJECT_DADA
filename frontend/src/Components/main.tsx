@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -46,7 +46,14 @@ const feedTabNavigation = () => {
 }
 
 
-const main = () => {
+const main = (props: { info: any; }) => {
+  console.log('메인 페이지 시작')
+  const [userInfo, setUserInfo] = useState(null);
+  useEffect(() => {
+  setUserInfo(props.info)
+  console.log('main으로 넘어온 값',userInfo)
+  }, [userInfo])
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
