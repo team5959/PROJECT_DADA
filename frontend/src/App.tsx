@@ -1,14 +1,13 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, AsyncStorage  } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { StyleSheet, Text, View } from 'react-native'
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import MainScreen from './Components/main'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [photo, setPhoto] = useState("")
+  const [name, setName] = useState(null)
+  const [email, setEmail] = useState(null)
   
   useEffect(() => {
     GoogleSignin.configure({
@@ -28,12 +27,11 @@ const App = () => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       // console.log(userInfo)					//👈콘솔로 로그인 정보 찍어보자
-      setName(userInfo.user.name)
-      setEmail(userInfo.user.email)
-      setPhoto(userInfo.user.photo)
-      console.log(userInfo)
-      console.log('name:', name)
-      console.log('email:', email)
+      await setName(userInfo.user.name)
+      await setEmail(userInfo.user.email)
+      await console.log(userInfo)
+      await console.log('name:', name)
+      await console.log('email:', email)
 
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -52,7 +50,7 @@ const App = () => {
   return (
     <View style={{ flex: 1 }}>
       {name ? (
-        <MainScreen />
+        <MainScreen/>
       ) : (
         <View style={styles.body}>
           <View style={styles.content}>
