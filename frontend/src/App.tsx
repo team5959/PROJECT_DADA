@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native'
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import MainScreen from './Components/main'
-import { Value } from 'react-native-reanimated';
 
 const App = () => {
   console.log('앱 시작했다.')

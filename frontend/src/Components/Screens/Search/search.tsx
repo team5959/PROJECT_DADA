@@ -10,7 +10,7 @@ interface Props {
   navigation: NavigationState,
 }
 
-const UserScreen = ({ route, navigation }: Props) => {
+const UserScreen = ({ navigation }: Props) => {
   // const { userIdx, userName, userLastName } = route.params; //전달받은 값(route)
   const [search, setSearch] = useState("")
 
@@ -37,7 +37,7 @@ const UserScreen = ({ route, navigation }: Props) => {
       />
       
       <Button
-        title="To Feed Screen"
+        title="To DADA Screen"
         type="outline"
         onPress={() => {
           navigation.navigate('Feed')
