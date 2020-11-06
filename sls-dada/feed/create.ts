@@ -1,40 +1,28 @@
 'use strict'
 
-import { DynamoDB } from 'aws-sdk'
-import * as stream from 'stream'
-import * as multiparty from 'multiparty'
+import { DynamoDB, S3 } from 'aws-sdk'
+import { ParsedPhoto, parsePhotos } from '../lib/FormdataHandler'
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
-module.exports.create = (event, context, callback) => {
+interface Photo {
+  date: string,
+  S3Object: S3.Object
+}
+
+interface Feed {
+  user: string,
+  date: string,
+  location: string,
+  title: string,
+  tags: Array<string>,
+  S3Object: S3.Object,
+  photos: Array<Photo>
+}
+
+module.exports.create = async (event, context, callback) => {
   // Content-type: multipart/form-data
-  const form = new multiparty.Form()
-
-  let str = new stream.Readable()
-  str.push(event.body)
-
-  // multyparty needs lowercase header key
-  const header = {}
-  const keys = Object.keys(event.headers)
-  for (let n = keys.length - 1; n >= 0; n--) {
-    header[keys[n].toLowerCase()] = event.headers[keys[n]]
-  }
-  str['headers'] = header
-
-  str.push(null)
-
-  form.parse(str, (err, fields, files) => {
-    if (err) {
-      console.error(err)
-      callback(null, {
-        statusCode: err.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch image files.'
-      })
-    }
-
-    console.log(files) // 사진 파일들
-  })
+  const files = (await parsePhotos(event, callback))['null']
 
   // TODO get metadata from photos and divide to feeds (by location)
 
