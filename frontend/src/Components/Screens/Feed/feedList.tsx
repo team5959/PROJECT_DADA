@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Button } from 'react-native'
 import { NavigationState } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import CalendarStrip from 'react-native-slideable-calendar-strip';
-import { Icon } from 'react-native-elements'
+import { Icon, Tile } from 'react-native-elements'
 
 const Stack = createStackNavigator();
 
@@ -38,28 +38,43 @@ const HomeScreen = ({ navigation }: Props) => {
           markedDate={['2020-11-02', '2020-11-03' ]}
           weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
         />
-      </View>    
+      </View>
+      
+      
+      <View style={styles.noneContent}>
+        <Text>작성된 피드가 없으면 이걸 보여줍니다.</Text>
+      </View>
+      
 
-      <Button
-        title="To Search Screen"
-        onPress={()=>{
-          console.log("사진선택 for Feed")
-          navigation.navigate('Search', 
-            // {
-            //   userIdx: 100,
-            //   userName: 'jong',
-            //   userLastName: 'kim',
-            // }
-          )
+
+
+      <Tile
+        featured
+        imageContainerStyle={{ 
+          borderRadius: 20,
+          // backgroundColor: '#f434', 
         }}
-      />
+        imageSrc={require('../../../Assets/Image/test_00.png')}
+        title="2020-11-03의 일기입니다."
+        height={150}
+        caption="Some Caption Text"
+        captionStyle={{
+          backgroundColor: 'red'
+        }}
+      >;
+      </Tile> 
+
+      
+
+      
       
       <View style={styles.addFeed}>
         <Icon
           reverse
           name='add'
           type='ionicon'
-          color='#517fa4'
+          color='#543fa4'
+          size={20}
           reverseColor='white'
           onPress={()=>{
             console.log('사진 선택시작')
@@ -78,6 +93,11 @@ const styles = StyleSheet.create({
   },
   addIcon: {
     backgroundColor: "white"
+  },
+  noneContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 
 })

@@ -1,13 +1,12 @@
-
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import FeedScreen from './Screens/Feed/feed'
-import photoSelectFeed from './Screens/Feed/photoSelectFeed'
-import EditFeed from './Screens/Feed/editFeed'
+import Ionics from 'react-native-vector-icons/dist/Ionicons';
+import FeedScreen from './Screens/Feed/feedList'
+import photoSelectFeed from './Screens/Feed/Write/photoSelectFeed'
+import EditFeed from './Screens/Feed/Write/editFeed'
 import SearchScreen from './Screens/Search/search'
 
 const Tab = createBottomTabNavigator();
@@ -30,7 +29,7 @@ const feedTabNavigation = () => {
               : 'search-outline';
           }
           // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionics name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{
@@ -49,17 +48,42 @@ const feedTabNavigation = () => {
 const main = (props: { info: any; }) => {
   console.log('메인 페이지 시작')
   const [userInfo, setUserInfo] = useState(null);
+
   useEffect(() => {
-  setUserInfo(props.info)
-  console.log('main으로 넘어온 값',userInfo)
+    setUserInfo(props.info)
+    console.log('main으로 넘어온 값',userInfo)
   }, [userInfo])
+
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name='Feed' component={feedTabNavigation} />
-        <Stack.Screen name='photoSelectFeed' component={photoSelectFeed} />
-        <Stack.Screen name='EditFeed' component={EditFeed} />
+        <Stack.Screen 
+          name='DADA' 
+          component={feedTabNavigation} 
+          options={{ 
+            headerTitleAlign: 'center',
+            headerStatusBarHeight: -10
+          }}
+        />
+        <Stack.Screen 
+          name='photoSelectFeed'
+          component={photoSelectFeed} 
+          options={{
+            // title: 'Diary',
+            headerTitleAlign: 'center',
+            headerStatusBarHeight: -10
+          }}
+        />
+        <Stack.Screen 
+          name='EditFeed' 
+          component={EditFeed} 
+          options={{
+            // title: 'Diary',
+            headerTitleAlign: 'center',
+            headerStatusBarHeight: -10
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   )
