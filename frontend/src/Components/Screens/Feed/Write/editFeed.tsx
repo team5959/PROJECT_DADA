@@ -8,10 +8,10 @@ import { NavigationContainer, NavigationState } from '@react-navigation/native';
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: NavigationState,
+  navigation: NavigationState
 }
 
-const editFeed = ({ navigation }) => {
+const editFeed = ({ navigation }: Props ) => {
   return (
     <View>
       <Text>피드 내용 수정할 페이지입니다.</Text>
