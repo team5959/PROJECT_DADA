@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "description": "serverless application for dada",
   "scripts": {
-    "lint": "tslint '*.ts'"
+    "lint": "tslint */*.ts"
   },
   "dependencies": {
+    "multiparty": "^4.2.2",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
