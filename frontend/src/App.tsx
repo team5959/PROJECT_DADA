@@ -4,6 +4,15 @@ import { StyleSheet, Text, View } from 'react-native'
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import MainScreen from './Components/main'
 
+
+const AWS = require('aws-sdk')
+AWS.config.update({
+  region: 'us-east-1',
+  accessKeyId: "***REMOVED***",
+  secretAccessKey: "***REMOVED***",
+});
+
+
 const App = () => {
   console.log('앱 시작했다.')
   const [userInfo, setUserInfo] = useState(null)
@@ -27,6 +36,12 @@ const App = () => {
       const userInfo = await GoogleSignin.signIn();
       // console.log(userInfo)					//👈콘솔로 로그인 정보 찍어보자
       setUserInfo(JSON.parse(JSON.stringify(userInfo)))
+      
+      console.log("idtoken : " + userInfo.idToken);
+      console.log("id : " + userInfo.user.id);
+
+      createBucket(userInfo.user.id);
+
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -39,6 +54,32 @@ const App = () => {
       }
       console.log(error)
     }
+  }
+
+  async function createBucket(userid: string) {
+
+    const s3 = new AWS.S3();
+
+    // s3.listBuckets(function(err: any, data: { Buckets: any; }) {
+    //     if (err) {
+    //       console.log("Error", err);
+    //     } else {
+    //       console.log("Success", data.Buckets);
+    //     }
+    // });
+
+    var bucketParams = {
+      Bucket : "dada-" + userid
+    };
+      
+      // call S3 to create the bucket
+    s3.createBucket(bucketParams, function(err: any, data: { Location: any; }) {
+      if (err) {
+        console.log("Error", err);
+      } else {
+        console.log("Success", data.Location);
+      }
+    });
   }
 
   return (
