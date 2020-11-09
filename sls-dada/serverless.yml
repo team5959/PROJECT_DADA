@@ -24,6 +24,8 @@ provider:
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
       Resource: "*"
+  apiGateway:
+    shouldStartNameWithService: true
 
 functions:
   getFeedList:
