@@ -5,7 +5,6 @@ import { NavigationState } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import CalendarStrip from 'react-native-slideable-calendar-strip';
 import { Button, Icon, Tile } from 'react-native-elements'
-import { color } from 'react-native-reanimated';
 
 const Stack = createStackNavigator();
 
