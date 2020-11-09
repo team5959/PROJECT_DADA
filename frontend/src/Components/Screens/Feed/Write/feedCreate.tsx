@@ -7,10 +7,14 @@ import { NavigationContainer, NavigationState } from '@react-navigation/native';
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: NavigationState
+  navigation: NavigationState,
+  route: any
 }
 
-const editFeed = ({ navigation }: Props ) => {
+const feedCreate = ({ route, navigation }: Props) => {
+  const routeItem  = route.params;
+  console.log('넘어온 routeItem', routeItem)
+
   return (
     <View>
       <Text>피드 내용 수정할 페이지입니다.</Text>
@@ -24,4 +28,4 @@ const editFeed = ({ navigation }: Props ) => {
   )
 }
 
-export default editFeed
+export default feedCreate
