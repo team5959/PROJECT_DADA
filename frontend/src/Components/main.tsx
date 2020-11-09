@@ -7,7 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionics from 'react-native-vector-icons/dist/Ionicons';
 import FeedScreen from './Screens/Feed/feedList'
 import photoSelectFeed from './Screens/Feed/Write/photoSelectFeed'
-import EditFeed from './Screens/Feed/Write/editFeed'
+import feedCreate from './Screens/Feed/Write/feedCreate'
 import SearchScreen from './Screens/Search/search'
 import FeedDetail from './Screens/Feed/Detail/feedDetail'
 import FeedEdit from './Screens/Feed/Detail/feedEdit'
@@ -83,8 +83,8 @@ const main = (props: { info: any }, { navigation }: Props) => {
           }}
         />
         <Stack.Screen 
-          name='EditFeed' 
-          component={EditFeed} 
+          name='feedCreate' 
+          component={feedCreate} 
           options={{
             // title: 'Diary',
             headerTitleAlign: 'center',
