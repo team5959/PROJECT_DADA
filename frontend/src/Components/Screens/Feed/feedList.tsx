@@ -31,7 +31,7 @@ const HomeScreen = ({ navigation }: Props) => {
   
   
 
-  const getMoviesFromApi = () => {
+  const fetchTest = () => {
     return fetch('https://reactnative.dev/movies.json')
       .then((response) => response.json())
       .then((json) => {
@@ -52,11 +52,17 @@ const HomeScreen = ({ navigation }: Props) => {
       }}>
         <View style={{ backgroundColor: 'white' }}>
           <Button
-            title="ddd"
+            title="fetch T"
             onPress={() => {
+<<<<<<< HEAD
+              fetchTest()
+            }} 
+            />
+=======
               getMoviesFromApi()
             }} />
           
+>>>>>>> 1423b19fefb5921778dba77352051acbcf1003eb
           <CalendarStrip
             // showWeekNumber
             selectedDate={selectedDate}
@@ -71,7 +77,7 @@ const HomeScreen = ({ navigation }: Props) => {
             // onSwipeDown={() => {
             //   alert('onSwipeDown');
             // }}
-            markedDate={['2020-11-02', '2020-11-03']}
+            markedDate={['2020-11-02', '2020-11-09']}
             weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
           />
         </View>
@@ -88,6 +94,9 @@ const HomeScreen = ({ navigation }: Props) => {
             imageContainerStyle={{ backgroundColor: '#f7f7', borderRadius: 18 }}
             imageSrc={require('../../../Assets/Image/test_00.png')}
             title='2020-11-11의 추억'
+            onPress={()=>{
+              navigation.navigate('FeedDetail')
+            }}
             featured
           />
 
@@ -103,10 +112,10 @@ const HomeScreen = ({ navigation }: Props) => {
 
         <View style={styles.addFeed}>
           <Icon
-            reverse
+            raised
             name='add'
             type='ionicon'
-            color='#f261DF'
+            color='black'
             size={20}
             reverseColor='black'
             onPress={() => {
@@ -120,7 +129,7 @@ const HomeScreen = ({ navigation }: Props) => {
     return (
       
       <View>
-        <Text>자료가 없어면 보여줄 화면</Text>
+        <Text>아직 피드가 없네요 작성해보세요!</Text>
         <TouchableOpacity>
           <Image source={{uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg'}}
           style={{width: 400, height: 400}} 

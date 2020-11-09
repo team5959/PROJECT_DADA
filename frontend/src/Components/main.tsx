@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
-import { NavigationContainer, StackActions } from '@react-navigation/native';
+import { View, Text, StyleSheet, Image} from 'react-native'
+import {Button} from 'react-native-elements'
+import { NavigationContainer, NavigationState } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionics from 'react-native-vector-icons/dist/Ionicons';
@@ -8,6 +9,9 @@ import FeedScreen from './Screens/Feed/feedList'
 import photoSelectFeed from './Screens/Feed/Write/photoSelectFeed'
 import EditFeed from './Screens/Feed/Write/editFeed'
 import SearchScreen from './Screens/Search/search'
+import FeedDetail from './Screens/Feed/Detail/feedDetail'
+import FeedEdit from './Screens/Feed/Detail/feedEdit'
+import Feed from '../Components/main'
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -43,9 +47,12 @@ const feedTabNavigation = () => {
     </Tab.Navigator>
   )
 }
+interface Props {
+  navigation: NavigationState
+}
 
 
-const main = (props: { info: any; }) => {
+const main = (props: { info: any }, { navigation }: Props) => {
   console.log('메인 페이지 시작')
   const [userInfo, setUserInfo] = useState(null);
 
@@ -83,6 +90,30 @@ const main = (props: { info: any; }) => {
             headerTitleAlign: 'center',
             headerStatusBarHeight: -10
           }}
+        />
+
+        {/* //피드 디테일 */}
+        <Stack.Screen
+          name='FeedDetail'
+          component={FeedDetail}
+          options={{
+            // title: 'Diary',
+            headerTitleAlign: 'center',
+            headerStatusBarHeight: -10
+          }}
+        />
+        <Stack.Screen
+          name='FeedEdit'
+          component={FeedEdit}
+          options={{
+            // title: 'Diary',
+            headerTitleAlign: 'center',
+            headerStatusBarHeight: -10,
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+          
         />
       </Stack.Navigator>
     </NavigationContainer>
