@@ -28,6 +28,7 @@ const createFeed = ({ navigation }: Props) => {
         tmp.append('path', images[i].path);
       }
       console.log('tmp',tmp)
+      navigation.navigate('feedCreate', tmp)
     }).catch(() => {
       console.log('사진을 불러오는데 실패하였습니다');
       navigation.navigate('Feed')
@@ -43,7 +44,7 @@ const createFeed = ({ navigation }: Props) => {
         onPress={() => {
           console.log('수정 페이지이동')
           console.log("불러온 데이터", tmp)
-          navigation.navigate('editFeed', tmp)
+          
         }} />
     </View>
   )
