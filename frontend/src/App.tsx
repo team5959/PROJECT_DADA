@@ -122,8 +122,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   googleButton: {
-    width: 380, 
-    height: 50,
+    width: 390, 
+    height: 55,
   },
 });
 export default App

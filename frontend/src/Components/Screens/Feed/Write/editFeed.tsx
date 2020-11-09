@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, NavigationState } from '@react-navigation/native';
 
-
 const Stack = createStackNavigator();
 
 interface Props {
