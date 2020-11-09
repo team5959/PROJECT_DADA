@@ -54,15 +54,9 @@ const HomeScreen = ({ navigation }: Props) => {
           <Button
             title="fetch T"
             onPress={() => {
-<<<<<<< HEAD
               fetchTest()
             }} 
             />
-=======
-              getMoviesFromApi()
-            }} />
-          
->>>>>>> 1423b19fefb5921778dba77352051acbcf1003eb
           <CalendarStrip
             // showWeekNumber
             selectedDate={selectedDate}

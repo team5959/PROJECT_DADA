@@ -21,19 +21,19 @@ export default function feedEdit({ navigation }: Props) {
         placeholder="title"
         leftIcon={{ type: 'font-awesome', name: 'calendar-o' }}
         style={styles}
-        onChangeText={value => setTitle({ title: value })}
+        onChangeText={value => setTitle(value)}
       />
       <Input
         placeholder="tag"
         leftIcon={{ type: 'font-awesome', name: 'tag' }}
         style={styles}
-        onChangeText={value => setTag({ tag: value })}
+        onChangeText={value => setTag(value)}
       />
       <Input
         placeholder="content"
         leftIcon={{ type: 'font-awesome', name: 'align-justify' }}
         style={styles}
-        onChangeText={value => setContent({ content: value })}
+        onChangeText={value => setContent(value)}
       />
       <View style={{ flexDirection: 'row-reverse', position: 'absolute', right: 0, bottom: 0 }}>
         <Icon
