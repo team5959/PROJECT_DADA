@@ -4,6 +4,7 @@ import { DynamoDB, S3 } from 'aws-sdk'
 import * as exif from 'exif-parser'
 import { readFileFromS3 } from '../lib/S3Handler'
 import { getAddress } from '../lib/KakaoAPIHandler'
+import { convertToDate } from '../lib/Util'
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
@@ -40,18 +41,18 @@ async function extractData (s3Objects: Array<S3Object>): Promise<Array<Photo>> {
     try {
       const result = parser.parse()
 
-      // maybe it's the original timestamp...
-      // result.tags.DateTimeOriginal or result.tags.CreateDate (long type -> need to casting)
+      photo['date'] = convertToDate(result.tags['CreateDate'])
 
       if ('GPSLongitude' in result.tags) {
         photo['gps'] = {
           lng: result.tags['GPSLongitude'],
           lat: result.tags['GPSLatitude']
         }
+
         photo['location'] = await getAddress(photo['gps'])
       }
     } catch (err) {
-      console.error(`Image file ${o.Bucket}/${o.Key} doesn't have meta data... skipped`)
+      console.error(`Failed to get meta data of image file ${o.Bucket}/${o.Key}... skipped`)
     }
 
     photos.push(photo)
