@@ -1,10 +1,11 @@
 'use strict'
 
-import { DynamoDB, S3 } from 'aws-sdk'
+import { DynamoDB, Rekognition } from 'aws-sdk'
 import * as exif from 'exif-parser'
 import { readFileFromS3 } from '../lib/S3Handler'
 import { getAddress } from '../lib/KakaoAPIHandler'
 import { convertToDate } from '../lib/Util'
+import { getImageLabels } from '../lib/RekognitionHandler'
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
@@ -15,6 +16,7 @@ interface S3Object {
 
 interface Photo {
   date: string,
+  unixTime: number,
   S3Object: S3Object,
   tags: Array<string>
 }
@@ -25,7 +27,7 @@ interface Feed {
   location: string,
   title: string,
   tags: Array<string>,
-  S3Object: S3.Object,
+  S3Object: S3Object,
   photos: Array<Photo>
 }
 
@@ -41,6 +43,7 @@ async function extractData (s3Objects: Array<S3Object>): Promise<Array<Photo>> {
     try {
       const result = parser.parse()
 
+      photo['unixTime'] = result.tags['CreateDate']
       photo['date'] = convertToDate(result.tags['CreateDate'])
 
       if ('GPSLongitude' in result.tags) {
@@ -55,6 +58,13 @@ async function extractData (s3Objects: Array<S3Object>): Promise<Array<Photo>> {
       console.error(`Failed to get meta data of image file ${o.Bucket}/${o.Key}... skipped`)
     }
 
+    try {
+      const labels: Array<Rekognition.Label> = await getImageLabels(o)
+      photo['tags'] = labels.map(label => label.Name)
+    } catch (err) {
+      console.error(`Failed to detect labels of image file ${o.Bucket}/${o.Key}... skipped`)
+      console.error(err)
+    }
     photos.push(photo)
   }
 
@@ -64,25 +74,24 @@ async function extractData (s3Objects: Array<S3Object>): Promise<Array<Photo>> {
 module.exports.create = async (event, context, callback) => {
   const data = JSON.parse(event.body)
 
-  // TODO divide to feeds (by location)
   const photos = await extractData(data['photos'])
-  // console.log(feeds)
+  photos.sort(((a, b) => a.unixTime - b.unixTime))
+
+  // TODO const { location, tags } = overallData(photos)
 
   const item = {
     user: event.pathParameters.user,
-    photos: photos
+    date: data['date'],
+    S3Object: photos[0].S3Object,
+    photos
   }
-  //
-  // // TODO add photos (Date, S3Object, Tags)
-  //
-  // // TODO add S3Object (대표사진) : Earliest photo's S3Object
-  // // TODO add date : Earliest photo's date
-  //
-  // // TODO add location
-  //
-  // // TODO add title : n월 n일의 추억
-  // // TODO add tags : from photos.tags
-  //
+
+  // if (location !== null) {
+  //   item['location'] = location
+  // }
+
+  // TODO add title : n월 n일의 추억
+
   // const params = {
   //   TableName: 'feed',
   //   Item: {
@@ -109,7 +118,7 @@ module.exports.create = async (event, context, callback) => {
   // })
   const response = {
     statusCode: 200,
-    body: JSON.stringify('hi')
+    body: JSON.stringify(item)
   }
   callback(null, response)
 }
