@@ -6,11 +6,13 @@ import MainScreen from './Components/main'
 
 
 const AWS = require('aws-sdk')
-AWS.config.update({
+AWS.config.update({ 
   region: 'us-east-1',
   accessKeyId: "***REMOVED***",
   secretAccessKey: "***REMOVED***",
 });
+
+
 
 
 const App = () => {
@@ -89,7 +91,7 @@ const App = () => {
       ) : (
         <View style={styles.body}>
           <View style={styles.content}>
-            <Text style={{fontSize: 120}}>DADA</Text>
+              <Text style={styles.title}>DADA</Text>            
           </View>
           <View style={styles.footer}>
             <GoogleSigninButton
@@ -106,6 +108,9 @@ const App = () => {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 120,
+  },
   content: {
     flex: 3,
     justifyContent: 'center',

@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native'
 import { NavigationState } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import CalendarStrip from 'react-native-slideable-calendar-strip';
-import { Button, Icon, Tile } from 'react-native-elements'
+import { Button, Icon } from 'react-native-elements'
 
 const AWS = require('aws-sdk')
 AWS.config.update({
@@ -82,26 +82,52 @@ const HomeScreen = ({ navigation }: Props) => {
 
 
         <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
-          <Tile
-            height={160}
-            overlayContainerStyle={{ backgroundColor: '#aeae', borderRadius: 18, marginBottom: 10 }}
-            imageContainerStyle={{ backgroundColor: '#f7f7', borderRadius: 18 }}
-            imageSrc={require('../../../Assets/Image/test_00.png')}
-            title='2020-11-11의 추억'
+          <TouchableOpacity
             onPress={()=>{
-              navigation.navigate('FeedDetail')
+              navigation.navigate('photoSelectFeed')
             }}
-            featured
-          />
+          >
+            <ImageBackground 
+              source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+              style={{
+                width: '100%',
+                height: 160, 
+                backgroundColor: 'red', 
+                borderRadius: 20, 
+                marginBottom: 10,
+              }}
+            >
+              <Text style={styles.textInCard}>{
+                JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 
+                첫 번째 추억..라어ㅏㄴㅇ러ㅏㄴ러ㅏㅣㄴ아ㅣㄹ너아ㅣ러나ㅣ어리ㅏㄴ어라ㅣㅓㄴ아ㅣ러ㅏㄴ임라누ㅑㅜㅑㄴ
+              </Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
-          <Tile
-            height={160}
-            overlayContainerStyle={{ backgroundColor: '#a1a1a1', borderRadius: 18, marginBottom: 10 }}
-            imageContainerStyle={{ backgroundColor: '#DAD9FF', borderRadius: 18 }}
-            imageSrc={require('../../../Assets/Image/test_01.png')}
-            title='2020-11-11의 추억'
-            featured
-          />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('photoSelectFeed')
+            }}
+          >
+            <ImageBackground
+              source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+              style={{
+                width: '100%',
+                height: 160,
+                backgroundColor: 'blue',
+                borderRadius: 20,
+                marginBottom: 10,
+              }}
+            >
+
+              <Text style={styles.textInCard}>11월 10일의 첫 번째 추억</Text>
+
+            </ImageBackground>
+          </TouchableOpacity>
+          
+          
+
+          
         </ScrollView>
 
         <View style={styles.addFeed}>
@@ -201,7 +227,16 @@ function viewAlbum(BucketName: string | number | boolean) {
 }
 
 const styles = StyleSheet.create({
-
+  textInCard: {
+    flex: 1,
+    borderRadius: 20,
+    color: "white",
+    fontSize: 28,
+    // fontWeight: "bold",
+    textAlign: "center",
+    textAlignVertical: "center",
+    backgroundColor: "#000000a0"
+  },
   addFeed: {
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
