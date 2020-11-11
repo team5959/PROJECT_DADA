@@ -4,7 +4,8 @@ import { DynamoDB } from 'aws-sdk'
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
-module.exports.get = (event, context, callback) => {
+module.exports.delete = (event, context, callback) => {
+  // TODO Delete related photos in S3, tag-image in RDS -> with another Rambda by trigger?
   const params = {
     TableName: 'feed',
     Key: {
@@ -13,7 +14,7 @@ module.exports.get = (event, context, callback) => {
     }
   }
 
-  dynamoDb.get(params, (error, result) => {
+  dynamoDb.delete(params, (error, result) => {
     if (error) {
       console.error(error)
       callback(null, {
@@ -25,8 +26,7 @@ module.exports.get = (event, context, callback) => {
     }
 
     const response = {
-      statusCode: 200,
-      body: JSON.stringify(result.Item)
+      statusCode: 204
     }
     callback(null, response)
   })

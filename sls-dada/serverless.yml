@@ -8,6 +8,7 @@ frameworkVersion: '2'
 plugins:
   - serverless-offline
   - serverless-plugin-typescript
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
@@ -23,7 +24,12 @@ provider:
         - "dynamodb:PutItem"
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
+        - "s3:GetObject"
+        - "rekognition:DetectLabels"
+        - "rds:*"
       Resource: "*"
+  apiGateway:
+    shouldStartNameWithService: true
 
 functions:
   getFeedList:
@@ -46,4 +52,32 @@ functions:
       - http:
           path: users/{user}/feeds
           method: post
+          cors: true
+  updateFeed:
+    handler: feed/update.update
+    events:
+      - http:
+          path: users/{user}/feeds/{date}
+          method: put
+          cors: true
+  deleteFeed:
+    handler: feed/delete.delete
+    events:
+      - http:
+          path: users/{user}/feeds/{date}
+          method: delete
+          cors: true
+  UpdatePhoto:
+    handler: photo/update.update
+    events:
+      - http:
+          path: users/{user}/feeds/{date}/photos/{photoIndex}
+          method: put
+          cors: true
+  DeletePhoto:
+    handler: photo/delete.delete
+    events:
+      - http:
+          path: users/{user}/feeds/{date}/photos/{photoIndex}
+          method: delete
           cors: true
