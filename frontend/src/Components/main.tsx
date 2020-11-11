@@ -118,9 +118,9 @@ const main = (props: { info: any }, { navigation }: Props) => {
             // title: 'Diary',
             headerTitleAlign: 'center',
             headerStatusBarHeight: -10,
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
+            // headerTitleStyle: {
+            //   fontWeight: 'bold',
+            // },
           }}
           
         />

@@ -14,8 +14,6 @@ AWS.config.update({
 });
 
 
-
-
 const App = () => {
   console.log('앱 시작했다.')
   const [userInfo, setUserInfo] = useState(null)
@@ -99,7 +97,8 @@ const App = () => {
       ) : (
         <View style={styles.body}>
           <View style={styles.content}>
-              <Text style={styles.title}>DADA</Text>            
+            <Text style={styles.title}>
+                <Text style={styles.span}>D</Text>A<Text style={styles.span}>D</Text>A</Text>            
           </View>
           <View style={styles.footer}>
             <GoogleSigninButton
@@ -116,14 +115,18 @@ const App = () => {
 }
 
 const styles = StyleSheet.create({
+  span:{
+    color: 'skyblue'
+  },
   title: {
     fontSize: 120,
+    fontFamily: "BMHANNAPro"
   },
   content: {
     flex: 3,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "ivory"
+    backgroundColor: "white"
   },
   footer: {
     flex: 1,
