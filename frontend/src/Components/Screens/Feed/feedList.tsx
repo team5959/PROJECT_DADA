@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }: Props) => {
   viewAlbum("dada-107302456767622872057");
 
   
-
+  // axios 테스트 파일(정상 작동 확인완료) 
   const fetchTest = () => {
     return fetch('https://reactnative.dev/movies.json')
       .then((response) => response.json())
@@ -45,17 +45,9 @@ const HomeScreen = ({ navigation }: Props) => {
   if (isData) {
     return (
 
-      <View style={{
-        flex: 1,
-        backgroundColor: 'ivory',
-      }}>
+      <View style={styles.main}>
+        {/* 상단 달력 */}
         <View style={{ backgroundColor: 'white' }}>
-          <Button
-            title="fetch T"
-            onPress={() => {
-              fetchTest()
-            }} 
-            />
           <CalendarStrip
             // showWeekNumber
             selectedDate={selectedDate}
@@ -77,7 +69,7 @@ const HomeScreen = ({ navigation }: Props) => {
 
 
         {/* map으로 돌릴부분 */}
-        <ScrollView style={{ flex: 1}}>
+        <ScrollView style={{ flex: 1, margin: 7}}>
           <TouchableOpacity
             onPress={()=>{
               navigation.navigate('FeedDetail')
@@ -95,17 +87,14 @@ const HomeScreen = ({ navigation }: Props) => {
             >
               <Text style={styles.textInCard}>{
                 JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 
-                첫 번째 추억
+                첫 번째 추억{'\n'}
+                <Text style={styles.tag}>#야... #이거 개어려움</Text>    
               </Text>
+                   
+              
+              
             </ImageBackground>
           </TouchableOpacity>
-
-          
-          
-
-          
-          
-          
 
           
         </ScrollView>
@@ -206,6 +195,14 @@ function viewAlbum(BucketName: string | number | boolean) {
 }
 
 const styles = StyleSheet.create({
+  tag:{
+    fontFamily: "BMHANNAPro",
+    fontSize: 20,
+  },
+  main: {
+    flex: 1,
+    backgroundColor: 'ivory',
+  },
   textInCard: {
     flex: 1,
     borderRadius: 20,
@@ -214,7 +211,8 @@ const styles = StyleSheet.create({
     // fontWeight: "bold",
     textAlign: "center",
     textAlignVertical: "center",
-    backgroundColor: "#000000a0"
+    backgroundColor: "#000000a0",
+    fontFamily: "BMHANNAPro"
   },
   addFeed: {
     justifyContent: 'flex-end',
