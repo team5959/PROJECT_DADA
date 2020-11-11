@@ -17,7 +17,8 @@ module.exports.update = (event, context, callback) => {
       ':tags': dynamoDb.createSet(data['tags']),
       ':S3Object': data['S3Object']
     },
-    UpdateExpression: 'SET tags=:tags, S3Object=:S3Object'
+    UpdateExpression: 'SET tags=:tags, S3Object=:S3Object',
+    ReturnValues: 'ALL_NEW'
   }
 
   if (data['location'] !== undefined) {
@@ -58,7 +59,7 @@ module.exports.update = (event, context, callback) => {
 
     const response = {
       statusCode: 200,
-      body: JSON.stringify(data)
+      body: JSON.stringify(result.Attributes)
     }
     callback(null, response)
   })
