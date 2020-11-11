@@ -7,8 +7,9 @@ export const readFileFromS3 = async ({ Bucket, Key }: { Bucket: string, Key: str
   return new Promise((resolve, reject) => {
     s3.getObject({ Bucket, Key }, (err, data) => {
       if (err) {
-        console.log(err)
-        return reject(err)
+        console.error(err)
+        console.error(`Failed to get meta data of image file ${Bucket}/${Key}... skipped`)
+        return reject()
       }
 
       return resolve(data.Body)
