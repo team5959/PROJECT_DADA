@@ -1,6 +1,6 @@
 import * as axios from 'axios'
 
-export async function getAddress (gps): Promise<any> {
+export const getAddress = async (gps): Promise<any> => {
   return axios.default.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${gps.lng}&y=${gps.lat}`,
     {
       headers: {
