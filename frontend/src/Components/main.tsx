@@ -12,7 +12,7 @@ import SearchScreen from './Screens/Search/search'
 import FeedDetail from './Screens/Feed/Detail/feedDetail'
 import FeedEdit from './Screens/Feed/Detail/feedEdit'
 import Feed from '../Components/main'
-
+import ObjectFile from './ObjectFile'
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 

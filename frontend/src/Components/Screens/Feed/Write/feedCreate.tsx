@@ -1,5 +1,5 @@
 import React, { useState, } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Span } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer, NavigationState } from '@react-navigation/native';
 import { Icon, Input, Button } from 'react-native-elements'
@@ -18,6 +18,7 @@ const editFeed = ({ route, navigation }: Props) => {
 
   const [title, setTitle] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [diaryDate, setDiaryDate] = useState(false);
   const [content, setContent] = useState(null);
 
   const showDatePicker = () => {
@@ -29,13 +30,13 @@ const editFeed = ({ route, navigation }: Props) => {
   };
 
   const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
+    console.log('선택된 날짜',date)
+    setDiaryDate(date)
     hideDatePicker();
   };
 
   return (
-    <View>
-      <Text>피드 내용을 추가 합니다.</Text>
+    <View style={{flex:1}}>
       <Input
         placeholder="title"
         // leftIcon={{ type: 'font-awesome', name: 'calendar-o' }}
@@ -43,24 +44,34 @@ const editFeed = ({ route, navigation }: Props) => {
       />
 
       <Input
+        multiline
         placeholder="content"
         // leftIcon={{ type: 'font-awesome', name: 'align-justify' }}
         onChangeText={(value) => {
           setContent(value)
         }}
       />
-          
-      <Button
-        type='clear'
-        title="작성일자 선택" onPress={showDatePicker} />
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
+      <View style={{flexDirection: 'row', paddingLeft: 7}}>
+        <Button
+          type='clear'
+          title="작성일자 선택" 
+          onPress={showDatePicker} 
+        />
+        {diaryDate && (<Text style={{ marginTop: 10, paddingRight: 20, width: '100%', textAlign: 'center' }}><Text style={{ color: "navy" }}>{JSON.stringify(diaryDate).slice(1, 11)} / {JSON.stringify(diaryDate).slice(12,17)}</Text>의 일기로 <Text style={{color: "navy"}}>기록</Text>합니다.</Text>)}
+        
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="datetime"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+
+        
+
+      </View>
 
 
+      {diaryDate && 
       <View style={{ flexDirection: 'row-reverse', position: 'absolute', right: 0, bottom: 0 }}>
         <Icon
           raised
@@ -75,23 +86,14 @@ const editFeed = ({ route, navigation }: Props) => {
           }}
           size={23}
         />
-      </View>
+      </View>}
+      
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  textareaContainer: {
-    height: 180,
-    padding: 5,
-    backgroundColor: '#F5FCFF',
-  },
-  textarea: {
-    textAlignVertical: 'top',
-    height: 170,
-    fontSize: 14,
-    color: '#333',
-  },
+  
 })
 
 export default editFeed
