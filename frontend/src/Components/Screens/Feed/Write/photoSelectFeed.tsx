@@ -35,12 +35,14 @@ const createFeed = ({ navigation }: Props) => {
     })
   })
 
-  return (
-    <View>
-      <Text>피드 생성을 위한 사진 선택창입니다.</Text>
+  useEffect(()=> {
+    navigation.navigate('Feed')
+  })
 
+  return (
+    <View style={{flex:1}}>  
       <Button
-        title='피드 내용 달기'
+        title='사진 선택'
         onPress={() => {
           console.log('수정 페이지이동')
           console.log("불러온 데이터", tmp)
