@@ -18,9 +18,11 @@ export const getImageLabelNames = async ({ Bucket, Key }): Promise<Array<string>
   return new Promise((resolve, reject) => {
     rek.detectLabels(params, (err, data) => {
       if (err) {
-        return reject(err)
+        console.error(err)
+        console.error(`Failed to detect labels of image file ${Bucket}/${Key}... skipped`)
+        return reject()
       }
-      return resolve(data.Labels)
+      return resolve(data.Labels.map(label => label.Name))
     })
   })
 }
