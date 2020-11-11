@@ -32,7 +32,7 @@ provider:
     shouldStartNameWithService: true
 
 functions:
-  getFeedList:
+  listFeed:
     handler: feed/list.list
     events:
       - http:

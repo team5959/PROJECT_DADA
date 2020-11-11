@@ -17,7 +17,7 @@ module.exports.list = (event, context, callback) => {
       ':date': event.pathParameters.date
     },
     KeyConditionExpression: '#user = :user AND begins_with(#date, :date)',
-    ProjectionExpression: 'id, #date, #location, title, tags, repPhoto',
+    ProjectionExpression: 'id, #date, #location, title, tags, S3Object',
     Select: 'SPECIFIC_ATTRIBUTES'
   }
 
