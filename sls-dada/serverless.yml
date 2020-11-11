@@ -32,7 +32,7 @@ provider:
     shouldStartNameWithService: true
 
 functions:
-  getFeedList:
+  listFeed:
     handler: feed/list.list
     events:
       - http:
@@ -67,14 +67,14 @@ functions:
           path: users/{user}/feeds/{date}
           method: delete
           cors: true
-  UpdatePhoto:
+  updatePhoto:
     handler: photo/update.update
     events:
       - http:
           path: users/{user}/feeds/{date}/photos/{photoIndex}
           method: put
           cors: true
-  DeletePhoto:
+  deletePhoto:
     handler: photo/delete.delete
     events:
       - http:
