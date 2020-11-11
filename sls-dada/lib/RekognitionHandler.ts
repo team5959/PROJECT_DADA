@@ -3,7 +3,7 @@ import { Rekognition } from 'aws-sdk'
 
 const rek = new Rekognition()
 
-export async function getImageLabels ({ Bucket, Key }): Promise<Array<Rekognition.Label>> {
+export const getImageLabelNames = async ({ Bucket, Key }): Promise<Array<string>> => {
   const params = {
     Image: {
       S3Object: {

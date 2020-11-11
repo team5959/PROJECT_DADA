@@ -32,13 +32,14 @@ interface Feed {
   photos: Array<Photo>
 }
 
-async function extractData (s3Objects: Array<S3Object>): Promise<Array<Photo>> {
+const extractData = async (s3Objects: Array<S3Object>): Promise<Array<Photo>> => {
   const photos = []
 
   for (const o of s3Objects) {
     const photo = {
       S3Object: o
     }
+
     const buffer = await readFileFromS3(o)
     const parser = exif.create(buffer)
     try {

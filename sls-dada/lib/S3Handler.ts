@@ -3,7 +3,7 @@ import { S3 } from 'aws-sdk'
 
 const s3 = new S3()
 
-export async function readFileFromS3 ({ Bucket, Key }: { Bucket: string, Key: string }) {
+export const readFileFromS3 = async ({ Bucket, Key }: { Bucket: string, Key: string }) => {
   return new Promise((resolve, reject) => {
     s3.getObject({ Bucket, Key }, (err, data) => {
       if (err) {
