@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native'
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import MainScreen from './Components/main'
+import ObjectFile from './Components/ObjectFile';
 
 
 const AWS = require('aws-sdk')
 AWS.config.update({
-  region: 'us-east-1',
-  accessKeyId: "***REMOVED***",
-  secretAccessKey: "***REMOVED***",
+  region: ObjectFile.aws.region,
+  accessKeyId: ObjectFile.aws.accessKeyId,
+  secretAccessKey: ObjectFile.aws.secretAccessKey
 });
 
 
@@ -37,9 +38,15 @@ const App = () => {
       // console.log(userInfo)					//👈콘솔로 로그인 정보 찍어보자
       setUserInfo(JSON.parse(JSON.stringify(userInfo)))
       
-      console.log("idtoken : " + userInfo.idToken);
-      console.log("id : " + userInfo.user.id);
+      //console.log("idtoken : " + userInfo.idToken);
+      //console.log("id : " + userInfo.user.id);
+      
+      ObjectFile.user.id =  userInfo.user.id;
+      ObjectFile.user.email = userInfo.user.email;
+      ObjectFile.user.name = userInfo.user.name!;
+      ObjectFile.user.photo = userInfo.user.photo!;
 
+      
       createBucket(userInfo.user.id);
 
     } catch (error) {

@@ -5,12 +5,13 @@ import { NavigationState } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import CalendarStrip from 'react-native-slideable-calendar-strip';
 import { Button, Icon, Tile } from 'react-native-elements'
+import ObjectFile from '~/Components/ObjectFile';
 
 const AWS = require('aws-sdk')
 AWS.config.update({
-  region: 'us-east-1',
-  accessKeyId: "***REMOVED***",
-  secretAccessKey: "***REMOVED***",
+  region: ObjectFile.aws.region,
+  accessKeyId: ObjectFile.aws.accessKeyId,
+  secretAccessKey: ObjectFile.aws.secretAccessKey
 });
 
 
