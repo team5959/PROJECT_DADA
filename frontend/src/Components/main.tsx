@@ -16,10 +16,19 @@ import Feed from '../Components/main'
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const feedTabNavigation = () => {
+const feedTabNavigation = (props: { info: any }) => {
+  const [userInfoo, setUserInfoo] = useState(null);
+
+  useEffect(() => {
+    setUserInfoo(props.info)
+    console.log('tap으로 넘어줄 값', userInfoo)
+  }, [])
+
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -32,7 +41,6 @@ const feedTabNavigation = () => {
               ? 'md-search'
               : 'search-outline';
           }
-          // You can return any component that you like here!
           return <Ionics name={iconName} size={size} color={color} />;
         },
       })}
@@ -67,7 +75,8 @@ const main = (props: { info: any }, { navigation }: Props) => {
       <Stack.Navigator>
         <Stack.Screen 
           name='DADA' 
-          component={feedTabNavigation} 
+          component={feedTabNavigation}
+          info={userInfo}
           options={{ 
             headerTitleAlign: 'center',
             headerStatusBarHeight: -10

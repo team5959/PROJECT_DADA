@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import CalendarStrip from 'react-native-slideable-calendar-strip';
 import { Button, Icon } from 'react-native-elements'
 
+
 const AWS = require('aws-sdk')
 AWS.config.update({
   region: 'us-east-1',
@@ -28,7 +29,6 @@ const HomeScreen = ({ navigation }: Props) => {
 
   viewAlbum("dada-107302456767622872057");
 
-  
   
 
   const fetchTest = () => {
@@ -76,15 +76,12 @@ const HomeScreen = ({ navigation }: Props) => {
           />
         </View>
 
-        <View style={styles.noneContent}>
-          <Text>{JSON.stringify(selectedDate).slice(1, 11)}</Text>
-        </View>
 
-
-        <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+        {/* map으로 돌릴부분 */}
+        <ScrollView style={{ flex: 1}}>
           <TouchableOpacity
             onPress={()=>{
-              navigation.navigate('photoSelectFeed')
+              navigation.navigate('FeedDetail')
             }}
           >
             <ImageBackground 
@@ -92,38 +89,22 @@ const HomeScreen = ({ navigation }: Props) => {
               style={{
                 width: '100%',
                 height: 160, 
-                backgroundColor: 'red', 
-                borderRadius: 20, 
+                backgroundColor: 'skyblue',
+                borderRadius: 20,
                 marginBottom: 10,
               }}
             >
               <Text style={styles.textInCard}>{
                 JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 
-                첫 번째 추억..라어ㅏㄴㅇ러ㅏㄴ러ㅏㅣㄴ아ㅣㄹ너아ㅣ러나ㅣ어리ㅏㄴ어라ㅣㅓㄴ아ㅣ러ㅏㄴ임라누ㅑㅜㅑㄴ
+                첫 번째 추억
               </Text>
             </ImageBackground>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('photoSelectFeed')
-            }}
-          >
-            <ImageBackground
-              source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
-              style={{
-                width: '100%',
-                height: 160,
-                backgroundColor: 'blue',
-                borderRadius: 20,
-                marginBottom: 10,
-              }}
-            >
+          
+          
 
-              <Text style={styles.textInCard}>11월 10일의 첫 번째 추억</Text>
-
-            </ImageBackground>
-          </TouchableOpacity>
+          
           
           
 
@@ -154,7 +135,6 @@ const HomeScreen = ({ navigation }: Props) => {
           <Image source={{uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg'}}
           style={{width: 400, height: 400}} 
         />
-          {/* <Image source={require('../../../Assets/Image/test_00.png')}/> */}
         </TouchableOpacity>
         
       </View>
