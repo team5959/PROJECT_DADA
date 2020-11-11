@@ -13,6 +13,7 @@ import FeedDetail from './Screens/Feed/Detail/feedDetail'
 import FeedEdit from './Screens/Feed/Detail/feedEdit'
 import Feed from '../Components/main'
 import ObjectFile from './ObjectFile'
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -23,7 +24,6 @@ const feedTabNavigation = (props: { info: any }) => {
     setUserInfoo(props.info)
     console.log('tap으로 넘어줄 값', userInfoo)
   }, [])
-
 
   return (
     <Tab.Navigator

@@ -10,7 +10,6 @@ interface Props {
 export default function feedDetail({ navigation }: Props) {
   useEffect(() => {
     console.log('피드 디테일 페이지 시작')
-
   })
   
   return (
