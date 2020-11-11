@@ -15,13 +15,14 @@ export default function feedDetail({ navigation }: Props) {
   
   return (
     <View style={{backgroundColor: 'yellow', flex: 1}}>
+      
       <Image source={require('../../../../Assets/Image/test_02.png')} />
       <View style={{ backgroundColor: 'skyblue', margin:5, flex: 1}}>
         <Text>이때 날씨 정말 좋았지</Text>
 
-        <Text style={styles.tag}>#날씨 지렸다. #그냥 하는 말</Text>
+        <Text style={styles.tag}># 날씨 지렸다. # 그냥 하는 말</Text>
 
-        <Text>
+        <Text style={styles.content}>
           날이 정말 좋았따아아 내용을 작성하는 부분인데 너무 횡해 보여서 그냥 아무말이나 등록해놓은건데 
           더이상 할말도 없고. 
         </Text>
@@ -59,7 +60,12 @@ export default function feedDetail({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+
   tag: {
+    marginTop: 3,
     color: 'blue',
+  },
+  content: {
+    marginTop: 3,
   },
 })

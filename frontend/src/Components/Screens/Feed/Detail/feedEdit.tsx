@@ -1,5 +1,5 @@
-import React, { useState} from 'react'
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import { NavigationContainer, NavigationState } from '@react-navigation/native';
 import { Icon, Input, Button } from 'react-native-elements'
@@ -49,8 +49,7 @@ export default function feedEdit({ navigation }: Props) {
           }}
           size={23}
         />
-      </View>
-      
+      </View>      
     </View>
   )
 }
