@@ -5,9 +5,10 @@ import * as exif from 'exif-parser'
 import { readFileFromS3 } from '../lib/S3Handler'
 import { getAddress } from '../lib/KakaoAPIHandler'
 import { convertToDate } from '../lib/Util'
-import { getImageLabels } from '../lib/RekognitionHandler'
+import { getImageLabelNames } from '../lib/RekognitionHandler'
+import { insertFeedToDB } from '../lib/DynamoDBHandler'
 
-const dynamoDb = new DynamoDB.DocumentClient()
+const dynamoDB = new DynamoDB.DocumentClient()
 
 interface S3Object {
   Bucket: string,
@@ -46,29 +47,50 @@ async function extractData (s3Objects: Array<S3Object>): Promise<Array<Photo>> {
       photo['unixTime'] = result.tags['CreateDate']
       photo['date'] = convertToDate(result.tags['CreateDate'])
 
-      if ('GPSLongitude' in result.tags) {
+      if (result.tags['GPSLongitude'] !== undefined
+        && !isNaN(result.tags['GPSLongitude'])
+        && !isNaN(result.tags['GPSLatitude'])) {
         photo['gps'] = {
           lng: result.tags['GPSLongitude'],
           lat: result.tags['GPSLatitude']
         }
-
-        photo['location'] = await getAddress(photo['gps'])
       }
     } catch (err) {
+      console.log(err)
       console.error(`Failed to get meta data of image file ${o.Bucket}/${o.Key}... skipped`)
     }
 
-    try {
-      const labels: Array<Rekognition.Label> = await getImageLabels(o)
-      photo['tags'] = labels.map(label => label.Name)
-    } catch (err) {
-      console.error(`Failed to detect labels of image file ${o.Bucket}/${o.Key}... skipped`)
-      console.error(err)
+    if (photo['gps'] !== undefined) {
+      await getAddress(photo['gps'])
+        .then((res) => {
+          photo['location'] = res
+        })
+        .catch(() => {
+          console.error(`Failed to get address from gps ${o.Bucket}/${o.Key}... skipped`)
+        })
     }
+
+    photo['tags'] = await getImageLabelNames(o)
+
     photos.push(photo)
   }
 
   return photos
+}
+
+const overallData = (photos: Array<Photo>): { location: string, tags: DynamoDB.DocumentClient.DynamoDbSet } => {
+  let location = null
+  const tagSet = new Set<string>()
+
+  for (const photo of photos) {
+    if (location === null && photo['location'] !== undefined) {
+      location = photo['location']
+    }
+    photo.tags.map(tag => tagSet.add(tag))
+  }
+
+  const tags = dynamoDB.createSet([...tagSet])
+  return { location, tags }
 }
 
 module.exports.create = async (event, context, callback) => {
@@ -77,48 +99,31 @@ module.exports.create = async (event, context, callback) => {
   const photos = await extractData(data['photos'])
   photos.sort(((a, b) => a.unixTime - b.unixTime))
 
-  // TODO const { location, tags } = overallData(photos)
+  const { location, tags } = overallData(photos)
 
   const item = {
     user: event.pathParameters.user,
     date: data['date'],
     S3Object: photos[0].S3Object,
-    photos
+    photos,
+    tags
   }
 
-  // if (location !== null) {
-  //   item['location'] = location
-  // }
+  if (location !== null) {
+    item['location'] = location
+  }
 
-  // TODO add title : n월 n일의 추억
-
-  // const params = {
-  //   TableName: 'feed',
-  //   Item: {
-  //     ...item
-  //   }
-  // }
-  //
-  // dynamoDb.put(params, (error, result) => {
-  //   if (error) {
-  //     console.error(error)
-  //     callback(null, {
-  //       statusCode: error.statusCode || 501,
-  //       headers: { 'Content-Type': 'text/plain' },
-  //       body: 'Couldn\'t upload to database'
-  //     })
-  //     return
-  //   }
-  //
-  //   const response = {
-  //     statusCode: 200,
-  //     body: JSON.stringify(params.Item)
-  //   }
-  //   callback(null, response)
-  // })
   const response = {
     statusCode: 200,
     body: JSON.stringify(item)
   }
+
+  await insertFeedToDB(item)
+    .catch((err) => {
+      response['statusCode'] = err.statusCode || 501
+      response['headers'] = { 'Content-Type': 'text/plain' }
+      response['body'] = 'Couldn\'t upload to database'
+    })
+
   callback(null, response)
 }
