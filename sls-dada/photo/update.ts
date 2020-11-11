@@ -14,16 +14,19 @@ module.exports.update = (event, context, callback) => {
       user: event.pathParameters.user,
       date: event.pathParameters.date
     },
-    ExpressionAttributeNames: {
-      '#comment': 'comment'
-    },
     ExpressionAttributeValues: {
-      ':comment': data.comment,
-      ':tags':  dynamoDb.createSet(data['tags'])
+      ':tags': dynamoDb.createSet(data['tags'])
     },
-    UpdateExpression: `SET photos[${event.pathParameters.photoIndex}].#comment = :comment,
-                           photos[${event.pathParameters.photoIndex}].tags = :tags`,
+    UpdateExpression: `SET photos[${event.pathParameters.photoIndex}].tags = :tags`,
     ReturnValues: 'ALL_NEW'
+  }
+
+  if (data['comment'] !== undefined) {
+    params['ExpressionAttributeNames'] = {
+      '#comment': 'comment'
+    }
+    params.ExpressionAttributeValues[':comment'] = data['comment']
+    params.UpdateExpression = params.UpdateExpression.concat(`, photos[${event.pathParameters.photoIndex}].#comment=:comment`)
   }
 
   dynamoDb.update(params, (error, result) => {
