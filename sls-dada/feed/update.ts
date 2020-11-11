@@ -13,18 +13,36 @@ module.exports.update = (event, context, callback) => {
       user: event.pathParameters.user,
       date: event.pathParameters.date
     },
-    ExpressionAttributeNames: {
-      '#location': 'location',
-      '#comment': 'comment'
-    },
     ExpressionAttributeValues: {
-      ':location': data['location'],
-      ':title': data['title'],
-      ':comment': data['comment'],
       ':tags': dynamoDb.createSet(data['tags']),
-      ':repPhoto': data['repPhoto']
+      ':S3Object': data['S3Object']
     },
-    UpdateExpression: 'SET #location=:location, title=:title, #comment=:comment, tags=:tags, repPhoto=:repPhoto'
+    UpdateExpression: 'SET tags=:tags, S3Object=:S3Object'
+  }
+
+  if (data['location'] !== undefined) {
+    params['ExpressionAttributeNames'] = {
+      '#location': 'location'
+    }
+    params.ExpressionAttributeValues[':location'] = data['location']
+    params.UpdateExpression = params.UpdateExpression.concat(', #location=:location')
+  }
+
+  if (data['title'] !== undefined) {
+    params.ExpressionAttributeValues[':title'] = data['title']
+    params.UpdateExpression = params.UpdateExpression.concat(', title=:title')
+  }
+
+  if (data['comment'] !== undefined) {
+    if (params['ExpressionAttributeNames'] === undefined) {
+      params['ExpressionAttributeNames'] = {
+        '#comment': 'comment'
+      }
+    } else {
+      params['ExpressionAttributeNames']['#comment'] = 'comment'
+    }
+    params.ExpressionAttributeValues[':comment'] = data['comment']
+    params.UpdateExpression = params.UpdateExpression.concat(', #comment=:comment')
   }
 
   dynamoDb.update(params, (error, result) => {
