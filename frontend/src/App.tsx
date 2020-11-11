@@ -78,6 +78,7 @@ const App = () => {
     var bucketParams = {
       Bucket : "dada-" + userid
     };
+
       
       // call S3 to create the bucket
     s3.createBucket(bucketParams, function(err: any, data: { Location: any; }) {
@@ -96,7 +97,8 @@ const App = () => {
       ) : (
         <View style={styles.body}>
           <View style={styles.content}>
-            <Text style={{fontSize: 120}}>DADA</Text>
+            <Text style={styles.title}>
+                <Text style={styles.span}>D</Text>A<Text style={styles.span}>D</Text>A</Text>            
           </View>
           <View style={styles.footer}>
             <GoogleSigninButton
@@ -113,11 +115,18 @@ const App = () => {
 }
 
 const styles = StyleSheet.create({
+  span:{
+    color: 'skyblue'
+  },
+  title: {
+    fontSize: 120,
+    fontFamily: "BMHANNAPro"
+  },
   content: {
     flex: 3,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "ivory"
+    backgroundColor: "white"
   },
   footer: {
     flex: 1,
