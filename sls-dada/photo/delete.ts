@@ -4,16 +4,19 @@ import { DynamoDB } from 'aws-sdk'
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
-module.exports.get = (event, context, callback) => {
-  const params = {
+module.exports.delete = (event, context, callback) => {
+  // TODO Delete related photo in S3, tag-image in RDS
+  let params = {
     TableName: 'feed',
     Key: {
       user: event.pathParameters.user,
       date: event.pathParameters.date
-    }
+    },
+    UpdateExpression: `REMOVE photos[${event.pathParameters.photoIndex}]`,
+    ReturnValues: 'ALL_NEW'
   }
 
-  dynamoDb.get(params, (error, result) => {
+  dynamoDb.update(params, (error, result) => {
     if (error) {
       console.error(error)
       callback(null, {
@@ -26,7 +29,7 @@ module.exports.get = (event, context, callback) => {
 
     const response = {
       statusCode: 200,
-      body: JSON.stringify(result.Item)
+      body: JSON.stringify(result.Attributes)
     }
     callback(null, response)
   })
