@@ -17,44 +17,40 @@ interface Props {
 
 export default function feedDetail(this: any, { route , navigation }) {
   let db: string | Promise<any>;
-  useEffect(() => {
-    console.log('피드 디테일 페이지 시작')
-
-  })
 
   const { selectedDate } = route.params;
   const [title, setTitle] = useState([]);
   const [comment, setComment] = useState([]);
   const [tags, setTags ] = useState([]);
+  const [photos, setPhotos] = useState([]);
+  useEffect(() => {
+    console.log('피드 디테일 페이지 시작')
 
+    
+      fetch('https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/107302456767622872057/feeds/2020-11-09T09:08:40')
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+  
+          setTitle(json.title)
+          setComment(json.comment)
+          setTags(json.tags)
+          setPhotos(json.S3Object.Key)
+          console.log("사진사진사진" + photos)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  
+       //console.log("fffff" + this.title)
+    
+  }, [])
+
+  
+  //selectedDate 임의지정 - feedlist에서 가져올때 props로 넘겨줘야 함
   console.log("ss: " + selectedDate );
 
 
-
-  const getDB = () => {
-    fetch('https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/107302456767622872057/feeds/2020-11-09T09:08:40')
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-
-        setTitle(json.title)
-        setComment(json.comment)
-        setTags(json.tags)
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-     //console.log("fffff" + this.title)
-  };
-
-  getDB();
-
-  console.log("sfsfsfsf : " + title);
-
-
-  //selectedDate 임의지정 - feedlist에서 가져올때 props로 넘겨줘야 함
-  
   const bucket = "dada-" + ObjectFile.user.id;
 
 
@@ -129,13 +125,18 @@ export default function feedDetail(this: any, { route , navigation }) {
     });
   }
   
+  //<Image source={require('../../../../Assets/Image/test_02.png')} />
+  
   return (
     <View style={{backgroundColor: 'yellow', flex: 1}}>
-      <Image source={require('../../../../Assets/Image/test_02.png')} />
+      <Image source={{uri: 'https://s3.amazonaws.com/dada-107302456767622872057/' + photos}}
+          style={{width: 400, height: 400}} 
+        />
       <View style={{ backgroundColor: 'skyblue', margin:5, flex: 1}}>
         <Text>{title}</Text>
 
-        <Text style={styles.tag}>{tags}#날씨 지렸다. #그냥 하는 말</Text>
+        
+        <Text style={styles.tag}>{tags + ""} +"" 를 해야 ,로 구분되서 출력되는데 이거 무엇 #날씨 지렸다. #그냥 하는 말</Text>
 
         <Text>
           {comment} 
