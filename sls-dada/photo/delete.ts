@@ -1,35 +1,42 @@
 'use strict'
 
-import { DynamoDB } from 'aws-sdk'
+import { deletePhotoFromDB } from '../lib/DynamoDBHandler'
+import { deleteFileFromS3 } from '../lib/S3Handler'
 
-const dynamoDb = new DynamoDB.DocumentClient()
+module.exports.delete = async (event, context, callback) => {
+  const index = event.pathParameters.photoIndex
+  const response = {
+    statusCode: 200
+  }
 
-module.exports.delete = (event, context, callback) => {
-  let params = {
-    TableName: 'feed',
+  const result = await deletePhotoFromDB({
     Key: {
       user: event.pathParameters.user,
       date: event.pathParameters.date
     },
-    UpdateExpression: `REMOVE photos[${event.pathParameters.photoIndex}]`,
-    ReturnValues: 'ALL_NEW'
+    index
+  })
+    .catch((err) => {
+      response['statusCode'] = err.statusCode || 501
+      response['headers'] = { 'Content-Type': 'text/plain' }
+      response['body'] = 'Couldn\'t upload to database'
+    })
+
+  await deleteFileFromS3(result['photos'][index]['S3Object'])
+    .catch((err) => {
+      console.error(err)
+    })
+
+  // 대표사진 바꿔주기
+  if (result['photos'][index]['S3Object']['Key'] === result['S3Object']['Key']) {
+    // 사진은 무조건 한 장 이상 포함 -> 삭제하는 인덱스가 0이면 1로, 아니면 0으로 대표 사진 바꾸기
+    result['S3Object']['Key'] = result['photos'][Number(index) === 0 ? 1 : 0]['S3Object']['Key']
   }
 
-  dynamoDb.update(params, (error, result) => {
-    if (error) {
-      console.error(error)
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the todo items.'
-      })
-      return
-    }
+  // 삭제한 사진 리턴 값에서 삭제
+  result['photos'].splice(index, 1)
 
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(result.Attributes)
-    }
-    callback(null, response)
-  })
+  response['body'] = JSON.stringify(result)
+
+  callback(null, response)
 }
