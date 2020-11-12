@@ -20,3 +20,21 @@ export const insertFeedToDB = (Item) => {
     })
   })
 }
+
+export const deleteFeedFromDB = (Key: { user: string, date: string }) => {
+  const params = {
+    TableName: 'feed',
+    Key,
+    ReturnValues: 'ALL_OLD'
+  }
+
+  return new Promise((resolve, reject) => {
+    dynamoDb.delete(params, (err, result) => {
+      if (err) {
+        console.error('Failed to delete data from DynamoDB', err)
+        reject(err)
+      }
+      resolve(result.Attributes)
+    })
+  })
+}
