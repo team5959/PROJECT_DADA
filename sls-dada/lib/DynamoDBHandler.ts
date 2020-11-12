@@ -21,6 +21,26 @@ export const insertFeedToDB = (Item) => {
   })
 }
 
+export const deletePhotoFromDB = ({ Key, index }: { Key: { user: string, date: string }, index: number}) => {
+  let params = {
+    TableName: 'feed',
+    Key,
+    UpdateExpression: `REMOVE photos[${index}]`,
+    ReturnValues: 'ALL_OLD'
+  }
+
+  return new Promise((resolve, reject) => {
+    dynamoDb.update(params, (err, result) => {
+      if (err) {
+        console.error('Failed to update data to DynamoDB', err)
+        reject(err)
+      }
+
+      resolve(result.Attributes)
+    })
+  })
+}
+
 export const deleteFeedFromDB = (Key: { user: string, date: string }) => {
   const params = {
     TableName: 'feed',
