@@ -1,32 +1,31 @@
 'use strict'
 
-import { DynamoDB } from 'aws-sdk'
+import { deleteFeedFromDB } from '../lib/DynamoDBHandler'
+import { deleteFilesFromS3 } from '../lib/S3Handler'
 
-const dynamoDb = new DynamoDB.DocumentClient()
-
-module.exports.delete = (event, context, callback) => {
-  const params = {
-    TableName: 'feed',
-    Key: {
-      user: event.pathParameters.user,
-      date: event.pathParameters.date
-    }
+module.exports.delete = async (event, context, callback) => {
+  const response = {
+    statusCode: 204
   }
 
-  dynamoDb.delete(params, (error, result) => {
-    if (error) {
-      console.error(error)
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the todo items.'
-      })
-      return
-    }
-
-    const response = {
-      statusCode: 204
-    }
-    callback(null, response)
+  const deletedFeed = await deleteFeedFromDB({
+    user: event.pathParameters.user,
+    date: event.pathParameters.date
   })
+    .catch((err) => {
+      response['statusCode'] = err.statusCode || 501
+      response['headers'] = { 'Content-Type': 'text/plain' }
+      response['body'] = 'Couldn\'t delete from database'
+    })
+
+  const photos: Array<Object> = deletedFeed['photos']
+  await deleteFilesFromS3({
+    Bucket: `dada-${event.pathParameters.user}`,
+    Keys: photos.map(photo => photo['S3Object']['Key'])
+  })
+    .catch((err) => {
+      console.error(err)
+    })
+
+  callback(null, response)
 }
