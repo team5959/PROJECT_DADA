@@ -58,7 +58,7 @@ const main = (props: { info: any }, { navigation }: Props) => {
 
   useEffect(() => {
     setUserInfo(props.info)
-    console.log('main으로 넘어온 값',userInfo)
+    //console.log('main으로 넘어온 값',userInfo)
   }, [userInfo])
 
 

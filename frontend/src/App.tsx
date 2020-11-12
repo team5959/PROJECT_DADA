@@ -82,9 +82,18 @@ const App = () => {
       // call S3 to create the bucket
     s3.createBucket(bucketParams, function(err: any, data: { Location: any; }) {
       if (err) {
-        console.log("Error", err);
+        console.log("Error createBucket : ", err);
       } else {
         console.log("Success", data.Location);
+      }
+    });
+
+    //읽기 권한 부여
+    s3.getBucketAcl(bucketParams, function(err: any, data: { Grants: any; }) {
+      if (err) {
+        console.log("Error ACL", err);
+      } else if (data) {
+        console.log("Success ACL", data.Grants);
       }
     });
   }

@@ -26,8 +26,17 @@ const HomeScreen = ({ navigation }: Props) => {
   const [isData, setIsData] = useState(true);
   
   console.log('selectedDate:', selectedDate)
+  
+  const bucket = "dada-" + ObjectFile.user.id;
 
-  viewAlbum("dada-107302456767622872057");
+
+  const predate = selectedDate.toJSON().split('T');
+  const pretime = predate[1].split('Z')[0].split(',');
+  //console.log(predate[0] + "  으악  " + pretime);
+  const prefix = predate[0] + '/' + pretime + '/';
+
+  console.log("prefix : " + prefix);
+  viewAlbum(bucket,prefix);
 
   
   
@@ -90,7 +99,9 @@ const HomeScreen = ({ navigation }: Props) => {
             imageSrc={require('../../../Assets/Image/test_00.png')}
             title='2020-11-11의 추억'
             onPress={()=>{
-              navigation.navigate('FeedDetail')
+              navigation.navigate('FeedDetail',{
+                selectedDate : selectedDate
+              })
             }}
             featured
           />
@@ -144,7 +155,7 @@ function getHtml(template: any[]) {
 
 
 // Show the photos that exist in an album.
-function viewAlbum(BucketName: string | number | boolean) {
+function viewAlbum(BucketName: string | number | boolean, PrefixName: string | number | boolean) {
   const s3 = new AWS.S3();
   
   var albumPhotosKey = encodeURIComponent(BucketName) + '/';
@@ -158,40 +169,45 @@ function viewAlbum(BucketName: string | number | boolean) {
   //   }
   // });
 
-  var bucketParams = {
+  var bucketParamsforAcl={
     Bucket : BucketName
+  }
+  var bucketParams = {
+    Bucket : BucketName,
+    Prefix : PrefixName
   };
 
   //읽기 권한 부여
-  s3.getBucketAcl(bucketParams, function(err: any, data: { Grants: any; }) {
+  s3.getBucketAcl(bucketParamsforAcl, function(err: any, data: { Grants: any; }) {
     if (err) {
-      console.log("Error", err);
+      console.log("Error ACL", err);
     } else if (data) {
-      console.log("Success", data.Grants);
+      console.log("Success ACL", data.Grants);
     }
   });
 
   s3.listObjects(bucketParams, function(err: any, data: any) {
     if (err) {
-      console.log("Error", err);
+      console.log("Error list", err);
     } else {
-      console.log("버킷 데이터 : ", data);
+      console.log("Success list", data);
 
-      console.log(s3.endpoint);
-      console.log(s3.endpoint.href);
+      // console.log(s3.endpoint);
+      // console.log(s3.endpoint.href);
       var href = s3.endpoint.href;
       
       var bucketUrl = href + BucketName + '/';
+// /2020-11-09/00:00:00.000/image.jpg
+
 
       var photos = data.Contents.map(function(photo: { Key: any; }) {
         var photoKey = photo.Key;
         
         var photoUrl = bucketUrl + encodeURIComponent(photoKey);
         
-        console.log("ss!!!!!" + photos);
-        console.log("dd!!!!!" + photoUrl);
+        //console.log("ss!!!!!" + photos);
+        console.log("사진:" + photoUrl);
         
-      
       });      
 
       
