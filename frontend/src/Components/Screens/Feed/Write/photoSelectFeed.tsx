@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, BackHandler } from 'react-native'
+import { View, Text, Button, StyleSheet } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, NavigationState } from '@react-navigation/native';
+import { NavigationState } from '@react-navigation/native';
 import CropPicker from 'react-native-image-crop-picker';
 
 const Tab = createBottomTabNavigator();
