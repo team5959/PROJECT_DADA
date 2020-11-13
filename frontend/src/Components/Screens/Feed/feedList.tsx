@@ -23,7 +23,7 @@ interface Props {
 }
 const HomeScreen = ({ navigation }: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isData, setIsData] = useState(null);
+  const [isData, setIsData] = useState(true);
   console.log('###################홈스크린함수 시작###################', isData)
   
  
@@ -42,149 +42,117 @@ const HomeScreen = ({ navigation }: Props) => {
     .then((response) => response.json())
     .then((json) => {
       console.log("response :" + JSON.stringify(json));
-      setIsData(true) // 피드가 있으면 있다고 표시
-      setIsData(false)
+      console.log('요청 보낸거가 성공했다.', typeof(json), json[0])
       setFeeds(json)
       return json;
     })
     .catch((error) => {
-      
+      setIsData(false)
+      console.log('요청 보낸거가 실패했다.')
       console.error(error);
   });
   }  
 
-  if (isData) {
-    return (
-      <View style={styles.main}>
-        {/* 상단 달력 */}
-        <View style={{ backgroundColor: 'white' }}>
-          <CalendarStrip
-            // showWeekNumber
-            selectedDate={selectedDate}
-            onPressDate={(date: React.SetStateAction<Date>) => {
-              console.log('date:', date)
-              setSelectedDate(date);
-              const tmp = getFeedList(date);
-              console.log("tmp :" + tmp);
-              console.log('selectedDate:', selectedDate)
-            }}
-            // onPressGoToday={(today) => {
-            //   setSelectedDate('today:',today);
-            // }}
-            // onSwipeDown={() => {
-            //   alert('onSwipeDown');
-            // }}
-            markedDate={['2020-11-02', '2020-11-09']}
-            weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
-          />
-        </View>
-
-        {feeds.map((feed, i)=>{
-          console.log("으악" + feed.date);
-          console.log(selectedDate);
-          console.log(feed.date);
-          return <ScrollView style={{ flex: 1, margin: 7}} key={i}>
+  
+  return (
+    <View style={styles.main}>
+      {/* 상단 달력 */}
+      <View style={{ backgroundColor: 'white' }}>
+        <CalendarStrip
+          // showWeekNumber
+          selectedDate={selectedDate}
+          onPressDate={(date: React.SetStateAction<Date>) => {
+            console.log('date:', date)
+            setSelectedDate(date);
+            const tmp = getFeedList(date);
+            console.log("tmp :" + tmp);
+            console.log('선택된 날짜:', selectedDate)
+          }}
+          // onPressGoToday={(today) => {
+          //   setSelectedDate('today:',today);
+          // }}
+          // onSwipeDown={() => {
+          //   alert('onSwipeDown');
+          // }}
+          markedDate={['2020-11-02', '2020-11-09']}
+          weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
+        />
+      </View>
+      { feeds[0] === undefined ? 
+        (<View style={{ flex: 1, margin: 7 }}>
+          {/* 일기 작성 유도 피드 */}
           <TouchableOpacity
-            onPress={()=>{
-              navigation.navigate('FeedDetail',{
-                selectedDate  : selectedDate,
-                date : feed.date
-              })
-            }}
-          >
-            <ImageBackground 
+            onPress={() => {
+              alert('가피드 생성')
+            }}>
+            <ImageBackground
               source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
               style={{
                 width: '100%',
-                height: 160, 
-                backgroundColor: 'skyblue',
+                height: 160,
+                backgroundColor: 'navy',
                 borderRadius: 20,
                 marginBottom: 10,
-              }}
+              }}              
             >
-              <Text style={styles.textInCard}>{
-                JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 
-                첫 번째 추억{'\n'}
-                <Text style={styles.tag}>{feed.title}  ~의 추억 대신 이거 제목으로 쓰면 되려나요? {'\n'}</Text>    
-                <Text style={styles.tag}>#야... #이거 개어려움</Text>    
-              </Text>
+              <Text style={styles.textInCard}>아직 작성한 일기가 없네요! {'\n'}
+                <Text style={styles.tag}>#일기를 써줄게요!</Text>
+              </Text>              
             </ImageBackground>
           </TouchableOpacity>
-        </ScrollView>
-        })}       
-
-        <View style={styles.addFeed}>
-          <Icon
-            raised
-            name='add'
-            type='ionicon'
-            color='black'
-            size={20}
-            reverseColor='black'
-            onPress={() => {
-              console.log('사진 선택시작')
-              navigation.navigate('photoSelectFeed')
-            }} />
-        </View>
-      </View>
-    )
-  } else {
-    return (
-      <View style={styles.main}>
-        {/* 상단 달력 */}
-        <View style={{ backgroundColor: 'white' }}>
-          <CalendarStrip
-            // showWeekNumber
-            selectedDate={selectedDate}
-            onPressDate={(date: React.SetStateAction<Date>) => {
-              console.log('date:', date)
-              setSelectedDate(date);
-              const tmp = getFeedList(date);
-              console.log("tmp :" + tmp);
-              console.log('selectedDate:', selectedDate)
-            }}
-            // onPressGoToday={(today) => {
-            //   setSelectedDate('today:',today);
-            // }}
-            // onSwipeDown={() => {
-            //   alert('onSwipeDown');
-            // }}
-            markedDate={['2020-11-02', '2020-11-09']}
-            weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
-          />
-        </View>
-      
-        <View>
-          <Text>아직 피드가 없네요 작성해보세요!</Text>
-          <TouchableOpacity>
-            <Image source={{uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg'}}
-            style={{width: 400, height: 400}} 
-          />
-            <Button
-            title='아직 피드가 없네요 DADA가 추천하는 일기입니다.'
+        </View>)
+        :
+        (feeds.map((feed, i) => {
+          console.log("으악" + feed.date);
+          console.log(selectedDate);
+          console.log(feed.date);
+          return <ScrollView style={{ flex: 1, margin: 7 }} key={i}>
+            <TouchableOpacity
               onPress={() => {
-                alert('가피드 생성')
+                navigation.navigate('FeedDetail', {
+                  selectedDate: selectedDate,
+                  date: feed.date
+                })
               }}
-            />
-          </TouchableOpacity>
-        </View>
+            >
+              <ImageBackground
+                source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+                style={{
+                  width: '100%',
+                  height: 160,
+                  backgroundColor: 'skyblue',
+                  borderRadius: 20,
+                  marginBottom: 10,
+                }}
+              >
+                <Text style={styles.textInCard}>{
+                  JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의
+                첫 번째 추억{'\n'}
+                  <Text style={styles.tag}>{feed.title}  ~의 추억 대신 이거 제목으로 쓰면 되려나요? {'\n'}</Text>
+                  <Text style={styles.tag}>#야... #이거 개어려움</Text>
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          </ScrollView>
+        }))
+      }       
 
-        <View style={styles.addFeed}>
-          <Icon
-            raised
-            name='add'
-            type='ionicon'
-            color='black'
-            size={20}
-            reverseColor='black'
-            onPress={() => {
-              console.log('사진 선택시작')
-              navigation.navigate('photoSelectFeed')
-            }} />
-        </View>
+      <View style={styles.addFeed}>
+        <Icon
+          raised
+          name='add'
+          type='ionicon'
+          color='black'
+          size={20}
+          reverseColor='black'
+          onPress={() => {
+            console.log('사진 선택시작')
+            navigation.navigate('photoSelectFeed')
+          }} />
       </View>
-    )
-  }  
+    </View>
+  )
+
 }
 
 function getHtml(template: any[]) {
