@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native'
 import { NavigationState } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import CalendarStrip from 'react-native-slideable-calendar-strip';
-import { Button, Icon, Tile } from 'react-native-elements'
+import { Button, Icon } from 'react-native-elements'
 import ObjectFile from '~/Components/ObjectFile';
 
 const AWS = require('aws-sdk')
@@ -13,7 +13,6 @@ AWS.config.update({
   accessKeyId: ObjectFile.aws.accessKeyId,
   secretAccessKey: ObjectFile.aws.secretAccessKey
 });
-
 
 const Stack = createStackNavigator();
 
@@ -26,21 +25,11 @@ const HomeScreen = ({ navigation }: Props) => {
   const [isData, setIsData] = useState(true);
   
   console.log('selectedDate:', selectedDate)
-  
-  const bucket = "dada-" + ObjectFile.user.id;
 
-
-  const predate = selectedDate.toJSON().split('T');
-  const pretime = predate[1].split('Z')[0].split(',');
-  //console.log(predate[0] + "  으악  " + pretime);
-  const prefix = predate[0] + '/' + pretime + '/';
-
-  console.log("prefix : " + prefix);
-  viewAlbum(bucket,prefix);
+  viewAlbum("dada-107302456767622872057");
 
   
-  
-
+  // axios 테스트 파일(정상 작동 확인완료) 
   const fetchTest = () => {
     return fetch('https://reactnative.dev/movies.json')
       .then((response) => response.json())
@@ -56,17 +45,9 @@ const HomeScreen = ({ navigation }: Props) => {
   if (isData) {
     return (
 
-      <View style={{
-        flex: 1,
-        backgroundColor: 'ivory',
-      }}>
+      <View style={styles.main}>
+        {/* 상단 달력 */}
         <View style={{ backgroundColor: 'white' }}>
-          <Button
-            title="fetch T"
-            onPress={() => {
-              fetchTest()
-            }} 
-            />
           <CalendarStrip
             // showWeekNumber
             selectedDate={selectedDate}
@@ -86,34 +67,38 @@ const HomeScreen = ({ navigation }: Props) => {
           />
         </View>
 
-        <View style={styles.noneContent}>
-          <Text>{JSON.stringify(selectedDate).slice(1, 11)}</Text>
-        </View>
 
-
-        <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
-          <Tile
-            height={160}
-            overlayContainerStyle={{ backgroundColor: '#aeae', borderRadius: 18, marginBottom: 10 }}
-            imageContainerStyle={{ backgroundColor: '#f7f7', borderRadius: 18 }}
-            imageSrc={require('../../../Assets/Image/test_00.png')}
-            title='2020-11-11의 추억'
+        {/* map으로 돌릴부분 */}
+        <ScrollView style={{ flex: 1, margin: 7}}>
+          <TouchableOpacity
             onPress={()=>{
               navigation.navigate('FeedDetail',{
                 selectedDate : selectedDate
               })
             }}
-            featured
-          />
+          >
+            <ImageBackground 
+              source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+              style={{
+                width: '100%',
+                height: 160, 
+                backgroundColor: 'skyblue',
+                borderRadius: 20,
+                marginBottom: 10,
+              }}
+            >
+              <Text style={styles.textInCard}>{
+                JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 
+                첫 번째 추억{'\n'}
+                <Text style={styles.tag}>#야... #이거 개어려움</Text>    
+              </Text>
+                   
+              
+              
+            </ImageBackground>
+          </TouchableOpacity>
 
-          <Tile
-            height={160}
-            overlayContainerStyle={{ backgroundColor: '#a1a1a1', borderRadius: 18, marginBottom: 10 }}
-            imageContainerStyle={{ backgroundColor: '#DAD9FF', borderRadius: 18 }}
-            imageSrc={require('../../../Assets/Image/test_01.png')}
-            title='2020-11-11의 추억'
-            featured
-          />
+          
         </ScrollView>
 
         <View style={styles.addFeed}>
@@ -140,7 +125,6 @@ const HomeScreen = ({ navigation }: Props) => {
           <Image source={{uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg'}}
           style={{width: 400, height: 400}} 
         />
-          {/* <Image source={require('../../../Assets/Image/test_00.png')}/> */}
         </TouchableOpacity>
         
       </View>
@@ -155,7 +139,7 @@ function getHtml(template: any[]) {
 
 
 // Show the photos that exist in an album.
-function viewAlbum(BucketName: string | number | boolean, PrefixName: string | number | boolean) {
+function viewAlbum(BucketName: string | number | boolean) {
   const s3 = new AWS.S3();
   
   var albumPhotosKey = encodeURIComponent(BucketName) + '/';
@@ -169,53 +153,40 @@ function viewAlbum(BucketName: string | number | boolean, PrefixName: string | n
   //   }
   // });
 
-  var bucketParamsforAcl={
-    Bucket : BucketName
-  }
   var bucketParams = {
-    Bucket : BucketName,
-    Prefix : PrefixName
+    Bucket : BucketName
   };
 
   //읽기 권한 부여
-  s3.getBucketAcl(bucketParamsforAcl, function(err: any, data: { Grants: any; }) {
+  s3.getBucketAcl(bucketParams, function(err: any, data: { Grants: any; }) {
     if (err) {
-      console.log("Error ACL", err);
+      console.log("Error", err);
     } else if (data) {
-      console.log("Success ACL", data.Grants);
+      console.log("Success", data.Grants);
     }
   });
 
-  // s3.listTables(bucketParams, function(err: any, data: any) {
-  //   if (err) {
-  //     console.log("Error list tables", err);
-  //   } else {
-  //     console.log("Success list tables", data);
-  //   }
-  // });
-
   s3.listObjects(bucketParams, function(err: any, data: any) {
     if (err) {
-      console.log("Error list", err);
+      console.log("Error", err);
     } else {
-      console.log("Success list", data);
+      console.log("버킷 데이터 : ", data);
 
-      // console.log(s3.endpoint);
-      // console.log(s3.endpoint.href);
+      console.log(s3.endpoint);
+      console.log(s3.endpoint.href);
       var href = s3.endpoint.href;
       
       var bucketUrl = href + BucketName + '/';
-// /2020-11-09/00:00:00.000/image.jpg
-
 
       var photos = data.Contents.map(function(photo: { Key: any; }) {
         var photoKey = photo.Key;
         
         var photoUrl = bucketUrl + encodeURIComponent(photoKey);
         
-        //console.log("ss!!!!!" + photos);
-        console.log("사진:" + photoUrl);
+        console.log("ss!!!!!" + photos);
+        console.log("dd!!!!!" + photoUrl);
         
+      
       });      
 
       
@@ -226,7 +197,25 @@ function viewAlbum(BucketName: string | number | boolean, PrefixName: string | n
 }
 
 const styles = StyleSheet.create({
-
+  tag:{
+    fontFamily: "BMHANNAPro",
+    fontSize: 20,
+  },
+  main: {
+    flex: 1,
+    backgroundColor: 'ivory',
+  },
+  textInCard: {
+    flex: 1,
+    borderRadius: 20,
+    color: "white",
+    fontSize: 28,
+    // fontWeight: "bold",
+    textAlign: "center",
+    textAlignVertical: "center",
+    backgroundColor: "#000000a0",
+    fontFamily: "BMHANNAPro"
+  },
   addFeed: {
     justifyContent: 'flex-end',
     alignItems: 'flex-end',

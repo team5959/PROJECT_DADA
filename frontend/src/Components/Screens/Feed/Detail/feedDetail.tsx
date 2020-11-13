@@ -15,9 +15,8 @@ interface Props {
   navigation: NavigationState
 }
 
-export default function feedDetail(this: any, { route , navigation }) {
-  let db: string | Promise<any>;
-
+export default function feedDetail( { route , navigation }) {
+  
   const { selectedDate } = route.params;
   const [title, setTitle] = useState([]);
   const [comment, setComment] = useState([]);
