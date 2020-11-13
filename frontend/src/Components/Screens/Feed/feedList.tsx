@@ -32,18 +32,7 @@ const HomeScreen = ({ navigation }: Props) => {
   useEffect(() => {
     viewAlbum(require('../../../App').BucketID);
 
-    fetch('https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/' + ObjectFile.user.id+'/feeds/of/2020-11-09')
-        .then((response) => response.json())
-        .then((json) => {
-          console.log("response :" + json);
-        })
-        .catch((error) => {
-          console.error(error);
-      });
-  
-       //console.log("fffff" + this.title)
-  }, []) // 무한루프 방지용 2번째 변수 []
-  
+  })
   
   const getFeedList = ( date: Date ) => {
     const feeddate = date.getFullYear() + "-" + ('0' + (date.getMonth() + 1)).slice(-2) + "-" + ('0' + date.getDate()).slice(-2);
