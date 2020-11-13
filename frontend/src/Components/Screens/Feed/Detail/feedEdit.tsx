@@ -3,8 +3,6 @@ import { StyleSheet, View, ScrollView, Dimensions, Text } from 'react-native'
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import { NavigationState } from '@react-navigation/native';
 import { Icon, Input, Button } from 'react-native-elements'
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import ImagesSwiper from "react-native-image-swiper";
 
 var width = Dimensions.get('window').width - Dimensions.get('window').width*0.868;
 
@@ -51,14 +49,14 @@ export default function feedEdit({ navigation }: Props) {
 
             {/* 선택한 이미지 */}
             <View style={{marginRight: 10}}>
-              <ImagesSwiper
+              {/* <ImagesSwiper
                 images={customImg}
                 // autoplay={true}
                 // autoplayTimeout={1.5}
                 showsPagination={true}
                 width={width}
                 height={width}
-              />
+              /> */}
             </View>
 
             <Input
@@ -77,6 +75,7 @@ export default function feedEdit({ navigation }: Props) {
           />
           <Input
             multiline
+            style={styles.content}
             placeholder="content"
             leftIcon={{ type: 'font-awesome', name: 'align-justify' }}
             onChangeText={value => setContent(value)}
@@ -110,6 +109,9 @@ export default function feedEdit({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  content:{
+    fontFamily: "BMHANNAPro",
+  },  
   main: {
     flex: 1,
     backgroundColor: 'ivory'

@@ -1,20 +1,24 @@
 import React, { useState, } from 'react'
-import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, ScrollView, Image } from 'react-native'
 import { NavigationState } from '@react-navigation/native';
 import { Icon, Input, Button } from 'react-native-elements'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import ImagesSwiper from "react-native-image-swiper";
 import moment from 'moment'; 
 import fs from 'react-native-fs'
 import { decode } from 'base64-arraybuffer';
+import { FlatListSlider } from 'react-native-flatlist-slider';
+
+// import { Image } from 'react-native-svg';
 
 var width = Dimensions.get('window').width - Dimensions.get('window').width * 0.868;
 
-const customImg = [
-  "https://firebasestorage.googleapis.com/v0/b/lotapp-9e84d.appspot.com/o/aster.jpg?alt=media&token=166e66b0-9c8e-4803-918e-25762c58dbda",
-  "https://firebasestorage.googleapis.com/v0/b/lotapp-9e84d.appspot.com/o/fan.jpg?alt=media&token=b419d507-9de8-4c4c-97e3-6b4eb2202e68",
-  "https://firebasestorage.googleapis.com/v0/b/lotapp-9e84d.appspot.com/o/stone.jpg?alt=media&token=e9d41537-7f26-4bfd-86eb-c2ef6fc58a9c"
-];
+const images = [
+  {
+    image: 'https://images.unsplash.com/photo-1567226475328-9d6baaf565cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
+    desc: 'Silent Waters in the mountains in midst of Himilayas',
+  },
+
+]
 
 const currentDate = moment().format("YYYY.MM.DD");
 
@@ -53,16 +57,10 @@ const editFeed = ({ route, navigation }: Props) => {
 
           <View style={{ flexDirection: 'row' }}>
             {/* 등록된 이미지 */}
-            <View style={{ marginRight: 10 }}>
-              <ImagesSwiper
-                images={customImg}
-                // autoplay={true}
-                // autoplayTimeout={1.5}
-                showsPagination={true}
-                width={width}
-                height={width}
-              />
-            </View>            
+            <Image
+              source={require('../../../../Assets/Image/test_00.png')}
+              style={{width: 50, height: 50, margin:8}}
+            />                 
 
             <Input
               style={styles.title}
@@ -70,13 +68,8 @@ const editFeed = ({ route, navigation }: Props) => {
               leftIcon={{ type: 'font-awesome', name: 'calendar-o' }}
               onChangeText={value => setTitle(value)}
             />
-
-
-
-
           </View>
           
-
           <Input
             multiline
             placeholder="content"
@@ -143,7 +136,7 @@ const styles = StyleSheet.create({
     margin: 7,
     marginTop: 10,
     flex: 1,
-    backgroundColor: 'ivory'
+    backgroundColor: 'white'
   },
   title: {
     marginTop: 10,
