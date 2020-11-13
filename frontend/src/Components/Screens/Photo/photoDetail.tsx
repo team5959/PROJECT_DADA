@@ -4,12 +4,12 @@ import { Icon } from 'react-native-elements'
 import { NavigationState } from '@react-navigation/native'
 
 interface Props {
-  Navigation: NavigationState
+  navigation: NavigationState
 }
 
 var width = Dimensions.get('window').width
 
-const photoDetail = ({ Navigation }: Props) => {
+const photoDetail = ({ navigation }: Props) => {
   useEffect(() => {
     console.log('포토 디테일 페이지 시작')
   })
@@ -19,7 +19,7 @@ const photoDetail = ({ Navigation }: Props) => {
       <View style={styles.mainIn}>
         <Image
           source={require('../../../Assets/Image/test_03.png')}
-          style={{ width: width, height: 300, margin: 8 }}
+          style={{ width: width*0.9, height: 300, margin: 8 }}
         />   
 
         {/* 내용 */}
@@ -41,8 +41,8 @@ const photoDetail = ({ Navigation }: Props) => {
             type='font-awesome'
             color='#494747'
             onPress={() => {
-              console.log('피드 수정한다.')
-              navigation.navigate('FeedEdit')
+              console.log('사진 수정한다.')
+              navigation.navigate('PhotoEdit')
             }}
             size={23}
           />
@@ -53,10 +53,10 @@ const photoDetail = ({ Navigation }: Props) => {
             type='font-awesome'
             color='#F78C75'
             onPress={() => {
-              console.log('피드 지운다.')
+              console.log('사진 지운다.')
               // 여기에 피드 삭제 메서드가 들어갑니다. 
 
-              alert('피드가 삭제되었습니다.')
+              alert('사진이 삭제되었습니다.')
             }}
             size={23}
           />
