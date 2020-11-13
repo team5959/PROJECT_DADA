@@ -186,6 +186,14 @@ function viewAlbum(BucketName: string | number | boolean, PrefixName: string | n
     }
   });
 
+  // s3.listTables(bucketParams, function(err: any, data: any) {
+  //   if (err) {
+  //     console.log("Error list tables", err);
+  //   } else {
+  //     console.log("Success list tables", data);
+  //   }
+  // });
+
   s3.listObjects(bucketParams, function(err: any, data: any) {
     if (err) {
       console.log("Error list", err);
