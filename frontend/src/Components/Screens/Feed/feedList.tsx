@@ -183,15 +183,10 @@ function viewAlbum(BucketName: string | number | boolean) {
         
         var photoUrl = bucketUrl + encodeURIComponent(photoKey);
         
-        console.log("ss!!!!!" + photos);
-        console.log("dd!!!!!" + photoUrl);
-        
-      
+        // console.log("ss!!!!!" + photos);
+        // console.log("dd!!!!!" + photoUrl);
       });      
-
-      
     }
-    //console.log(photos);
   });
 
 }
