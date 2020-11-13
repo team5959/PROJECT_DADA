@@ -23,14 +23,36 @@ interface Props {
 const HomeScreen = ({ navigation }: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isData, setIsData] = useState(true);
-  
+ 
+  const [feeds, setFeeds] = useState([]);
   console.log('selectedDate:', selectedDate)
+
+ 
 
   useEffect(() => {
     viewAlbum(require('../../../App').BucketID);
-  })
 
+  })
   
+  const getFeedList = ( date: Date ) => {
+    const feeddate = date.getFullYear() + "-" + ('0' + (date.getMonth() + 1)).slice(-2) + "-" + ('0' + date.getDate()).slice(-2);
+    console.log("feeddate : " + feeddate);
+
+    fetch('https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/' + ObjectFile.user.id+'/feeds/of/' + feeddate)
+    .then((response) => response.json())
+    .then((json) => {
+      console.log("response :" + JSON.stringify(json));
+
+      setFeeds(json)
+      return json;
+    })
+    .catch((error) => {
+      console.error(error);
+  });
+
+    
+  }  
+    
   // axios 테스트 파일(정상 작동 확인완료) 
   const fetchTest = () => {
     return fetch('https://reactnative.dev/movies.json')
@@ -56,6 +78,8 @@ const HomeScreen = ({ navigation }: Props) => {
             onPressDate={(date: React.SetStateAction<Date>) => {
               console.log('date:', date)
               setSelectedDate(date);
+              const tmp = getFeedList(date);
+              console.log("tmp :" + tmp);
               console.log('selectedDate:', selectedDate)
             }}
             // onPressGoToday={(today) => {
@@ -71,11 +95,16 @@ const HomeScreen = ({ navigation }: Props) => {
 
 
         {/* map으로 돌릴부분 */}
-        <ScrollView style={{ flex: 1, margin: 7}}>
+        {feeds.map((feed, i)=>{
+          console.log("으악" + feed.date);
+          console.log(selectedDate);
+          console.log(feed.date);
+          return <ScrollView style={{ flex: 1, margin: 7}} key={i}>
           <TouchableOpacity
             onPress={()=>{
               navigation.navigate('FeedDetail',{
-                selectedDate : selectedDate
+                selectedDate  : selectedDate,
+                date : feed.date
               })
             }}
           >
@@ -92,6 +121,7 @@ const HomeScreen = ({ navigation }: Props) => {
               <Text style={styles.textInCard}>{
                 JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 
                 첫 번째 추억{'\n'}
+                <Text style={styles.tag}>{feed.title}  ~의 추억 대신 이거 제목으로 쓰면 되려나요? {'\n'}</Text>    
                 <Text style={styles.tag}>#야... #이거 개어려움</Text>    
               </Text>
                    
@@ -102,6 +132,11 @@ const HomeScreen = ({ navigation }: Props) => {
 
           
         </ScrollView>
+          
+          
+          ;
+        })}
+        
 
         <View style={styles.addFeed}>
           <Icon
