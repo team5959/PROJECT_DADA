@@ -1,15 +1,13 @@
 import 'react-native-gesture-handler';
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-community/google-signin';
-import MainScreen from './Components/main';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
+import MainScreen from './Components/main'
 import ObjectFile from './Components/ObjectFile';
 
-const AWS = require('aws-sdk');
+var dWidth = Dimensions.get('window').width // 디바이스 넓이
+
+const AWS = require('aws-sdk')
 AWS.config.update({
   region: ObjectFile.aws.region,
   accessKeyId: ObjectFile.aws.accessKeyId,
@@ -140,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   googleButton: {
-    width: 390,
+    width: dWidth*0.8,
     height: 55,
   },
 });
