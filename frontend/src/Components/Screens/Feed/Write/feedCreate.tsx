@@ -20,7 +20,7 @@ const images = [
 
 ]
 
-const currentDate = moment().format("YYYY.MM.DD");
+let currentDate = moment().format("YYYY.MM.DD");
 
 interface Props {
   navigation: NavigationState,
@@ -36,6 +36,8 @@ const editFeed = ({ route, navigation }: Props) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [diaryDate, setDiaryDate] = useState(false);
 
+
+  currentDate = JSON.stringify(diaryDate).slice(1, 5)+"."+JSON.stringify(diaryDate).slice(6, 8)+"."+JSON.stringify(diaryDate).slice(9, 11)
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
