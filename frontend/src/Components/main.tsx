@@ -86,7 +86,7 @@ const main = (props: { info: any }, { navigation }: Props) => {
         />
         <Stack.Screen 
           name='photoSelectFeed'
-          component={photoSelectFeed} 
+          component={photoSelectFeed}
           options={{
             // title: 'Diary',
             headerTitleAlign: 'center',
@@ -95,11 +95,13 @@ const main = (props: { info: any }, { navigation }: Props) => {
         />
         <Stack.Screen 
           name='feedCreate' 
-          component={feedCreate} 
+          component={feedCreate}
+          info={userInfo}
           options={{
             // title: 'Diary',
             headerTitleAlign: 'center',
             headerStatusBarHeight: -10
+            
           }}
         />
 
