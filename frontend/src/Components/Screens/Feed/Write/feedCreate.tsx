@@ -3,7 +3,11 @@ import { View, Text, StyleSheet, Dimensions, ScrollView, Image } from 'react-nat
 import { NavigationState } from '@react-navigation/native';
 import { Icon, Input, Button } from 'react-native-elements'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from 'moment'; 
+import fs from 'react-native-fs'
+import { decode } from 'base64-arraybuffer';
 import { FlatListSlider } from 'react-native-flatlist-slider';
+
 // import { Image } from 'react-native-svg';
 
 var width = Dimensions.get('window').width - Dimensions.get('window').width * 0.868;
@@ -16,6 +20,8 @@ const images = [
 
 ]
 
+let currentDate = moment().format("YYYY.MM.DD");
+
 interface Props {
   navigation: NavigationState,
   route: any
@@ -23,13 +29,15 @@ interface Props {
 
 const editFeed = ({ route, navigation }: Props) => {
   const routeItem  = route.params;
-  console.log('넘어온 routeItem', routeItem)
+  //console.log('넘어온 routeItem', routeItem)
 
   const [title, setTitle] = useState(null);
   const [content, setContent] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [diaryDate, setDiaryDate] = useState(false);
 
+
+  currentDate = JSON.stringify(diaryDate).slice(1, 5)+"."+JSON.stringify(diaryDate).slice(6, 8)+"."+JSON.stringify(diaryDate).slice(9, 11)
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -107,6 +115,8 @@ const editFeed = ({ route, navigation }: Props) => {
                 alert('완료')
                 console.log('피드 등록')
                 //여기 피드 등록하는 함수를 넣습니다.
+                FolderCreate(require('../../../../App').BucketID);
+                PicUpload(require('../../../../App').BucketID, routeItem);
                 navigation.navigate('Feed')
                 console.log('title', title)
                 console.log('content', content)
@@ -135,5 +145,55 @@ const styles = StyleSheet.create({
     fontFamily: ''
   },
 })
+
+// 날짜로 폴더 생성 (YYYY.MM.DD/)
+function FolderCreate(BucketName: string | number | boolean) {
+  const s3 = new AWS.S3();
+
+  var uploadParams = {
+    Bucket : BucketName,
+    Key : currentDate + '/'
+  };
+
+  s3.putObject(uploadParams, function(err: any, data: any){
+    if(err){
+      console.log("FILE Create Err", err);
+    }else {
+      console.log("FILE Create Success", data);
+    }
+  });
+}
+
+// 사진첩에서 체크한 사진 업로드
+async function PicUpload(BucketName: string | number | boolean, datas : any){
+  const s3 = new AWS.S3();
+
+  for(var i = 0; i < datas._parts.length; i += 2){
+
+    const base64 = await fs.readFile(datas._parts[i+1][1], 'base64')
+    const arrayBuffer = decode(base64)
+    
+    var upload = new AWS.S3.ManagedUpload({
+      params: {
+        Bucket: BucketName + "/" + currentDate,
+        Key: datas._parts[i][1],
+        Body: arrayBuffer,
+        ContentType: 'image/jpeg',
+        ACL: "public-read",
+      }
+    })
+
+    var promise = upload.promise();
+
+    promise.then(
+      function(data: any){
+        console.log("Upload Success", data);
+      },
+      function(err: any){
+        console.log("Upload Err", err);
+      }
+    )
+  }
+}
 
 export default editFeed
