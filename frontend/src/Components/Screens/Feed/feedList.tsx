@@ -26,7 +26,9 @@ const HomeScreen = ({ navigation }: Props) => {
   
   console.log('selectedDate:', selectedDate)
 
-  viewAlbum("dada-107302456767622872057");
+  useEffect(() => {
+    viewAlbum(require('../../../App').BucketID);
+  })
 
   
   // axios 테스트 파일(정상 작동 확인완료) 

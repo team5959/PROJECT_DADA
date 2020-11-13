@@ -45,7 +45,7 @@ const App = () => {
       ObjectFile.user.email = userInfo.user.email;
       ObjectFile.user.name = userInfo.user.name!;
       ObjectFile.user.photo = userInfo.user.photo!;
-
+      exports.BucketID = 'dada-' + userInfo.user.id
       
       createBucket(userInfo.user.id);
 
