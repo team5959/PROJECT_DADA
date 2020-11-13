@@ -32,16 +32,16 @@ const images = [
 
 const feedDetail = ({ route, navigation }) => {
   
-  const { selectedDate } = route.params;
+  const { selectedDate, date } = route.params; // 무슨형식 쓸지 모르니 우선 둘다
   const [title, setTitle] = useState([]);
   const [comment, setComment] = useState([]);
   const [tags, setTags ] = useState([]);
   const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
-    console.log('피드 디테일 페이지 시작')
+    console.log('피드 디테일 페이지 시작' + date)
     
-    fetch('https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/' + ObjectFile.user.id+'/feeds/2020-11-09T09:08:40')
+    fetch('https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/' + ObjectFile.user.id+'/feeds/' + date)
         .then((response) => response.json())
         .then((json) => {
           console.log(json);
