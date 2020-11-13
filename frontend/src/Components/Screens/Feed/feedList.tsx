@@ -74,7 +74,9 @@ const HomeScreen = ({ navigation }: Props) => {
         <ScrollView style={{ flex: 1, margin: 7}}>
           <TouchableOpacity
             onPress={()=>{
-              navigation.navigate('FeedDetail')
+              navigation.navigate('FeedDetail',{
+                selectedDate : selectedDate
+              })
             }}
           >
             <ImageBackground 
