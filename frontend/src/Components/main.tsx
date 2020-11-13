@@ -11,6 +11,8 @@ import feedCreate from './Screens/Feed/Write/feedCreate'
 import SearchScreen from './Screens/Search/search'
 import FeedDetail from './Screens/Feed/Detail/feedDetail'
 import FeedEdit from './Screens/Feed/Detail/feedEdit'
+import PhotoDetail from './Screens/Photo/photoDetail'
+import PhotoEdit from './Screens/Photo/photoEdit'
 import Feed from '../Components/main'
 import ObjectFile from './ObjectFile'
 
@@ -122,8 +124,28 @@ const main = (props: { info: any }, { navigation }: Props) => {
             //   fontWeight: 'bold',
             // },
           }}
-          
         />
+
+        {/* //사진 디테일 */}
+        <Stack.Screen
+          name='PhotoDetail'
+          component={PhotoDetail}
+          options={{
+            // title: 'Diary',
+            headerTitleAlign: 'center',
+            headerStatusBarHeight: -10
+          }}
+        />
+        <Stack.Screen
+          name='PhotoEdit'
+          component={PhotoEdit}
+          options={{
+            // title: 'Diary',
+            headerTitleAlign: 'center',
+            headerStatusBarHeight: -10
+          }}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   )
