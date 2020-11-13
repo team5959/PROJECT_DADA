@@ -23,8 +23,7 @@ interface Props {
 }
 const HomeScreen = ({ navigation }: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isData, setIsData] = useState(true);
-  console.log('###################홈스크린함수 시작###################', isData)
+  console.log('###################홈스크린함수 시작###################')
   
  
   const [feeds, setFeeds] = useState([]);
@@ -42,13 +41,10 @@ const HomeScreen = ({ navigation }: Props) => {
     .then((response) => response.json())
     .then((json) => {
       console.log("response :" + JSON.stringify(json));
-      console.log('요청 보낸거가 성공했다.', typeof(json), json[0])
       setFeeds(json)
       return json;
     })
     .catch((error) => {
-      setIsData(false)
-      console.log('요청 보낸거가 실패했다.')
       console.error(error);
   });
   }  
