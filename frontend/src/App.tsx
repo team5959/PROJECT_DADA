@@ -5,8 +5,7 @@ import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-com
 import MainScreen from './Components/main'
 import ObjectFile from './Components/ObjectFile';
 
-var dWidth = Dimensions.get('window').width
-console.log('디바이스 너비:', dWidth)
+var dWidth = Dimensions.get('window').width // 디바이스 넓이
 
 const AWS = require('aws-sdk')
 AWS.config.update({
