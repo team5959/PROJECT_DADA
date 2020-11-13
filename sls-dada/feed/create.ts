@@ -105,6 +105,8 @@ module.exports.create = async (event, context, callback) => {
   const item = {
     user: event.pathParameters.user,
     date: data['date'],
+    title: data['title'],
+    contents: data['contents'],
     S3Object: photos[0].S3Object,
     photos,
     tags
