@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>119212281486-s67ptm6d6mpe9obo9jd6b5i479qr35dp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.119212281486-s67ptm6d6mpe9obo9jd6b5i479qr35dp</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>119212281486-s898q3cspd0r8uot8rkmacgvavu2ut9p.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCDbi91_D04zbHdw3pbdzCfx_Pi_UQq5n8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>119212281486</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>dada.frontend</string>
+	<key>PROJECT_ID</key>
+	<string>dada-ssafy</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dada-ssafy.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:119212281486:ios:e3457d1cf51e2cae0483df</string>
+	<key>DATABASE_URL</key>
+	<string>https://dada-ssafy.firebaseio.com</string>
+</dict>
+</plist>
