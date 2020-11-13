@@ -1,10 +1,12 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import MainScreen from './Components/main'
 import ObjectFile from './Components/ObjectFile';
 
+var dWidth = Dimensions.get('window').width
+console.log('디바이스 너비:', dWidth)
 
 const AWS = require('aws-sdk')
 AWS.config.update({
@@ -12,7 +14,6 @@ AWS.config.update({
   accessKeyId: ObjectFile.aws.accessKeyId,
   secretAccessKey: ObjectFile.aws.secretAccessKey
 });
-
 
 const App = () => {
   console.log('앱 시작했다.')
@@ -78,7 +79,6 @@ const App = () => {
     var bucketParams = {
       Bucket : "dada-" + userid
     };
-
       
       // call S3 to create the bucket
     s3.createBucket(bucketParams, function(err: any, data: { Location: any; }) {
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   googleButton: {
-    width: 390, 
+    width: dWidth*0.8,
     height: 55,
   },
 });
