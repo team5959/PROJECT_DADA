@@ -1,8 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { NavigationState } from '@react-navigation/native'
 import { FlatListSlider } from 'react-native-flatlist-slider';
+import ObjectFile from '~/Components/ObjectFile';
+
+const AWS = require('aws-sdk')
+AWS.config.update({
+  region: ObjectFile.aws.region,
+  accessKeyId: ObjectFile.aws.accessKeyId,
+  secretAccessKey: ObjectFile.aws.secretAccessKey
+});
 
 interface Props {
   navigation: NavigationState
@@ -22,10 +30,44 @@ const images = [
   },
 ]
 
-const feedDetail = ({ navigation }: Props) => {
+const feedDetail = ({ route, navigation }) => {
+  
+  const { selectedDate, date } = route.params; // 무슨형식 쓸지 모르니 우선 둘다
+  const [title, setTitle] = useState([]);
+  const [comment, setComment] = useState([]);
+  const [tags, setTags ] = useState([]);
+  const [photos, setPhotos] = useState([]);
+
   useEffect(() => {
-    console.log('피드 디테일 페이지 시작')
-  })
+    console.log('피드 디테일 페이지 시작' + date)
+    
+    fetch('https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/' + ObjectFile.user.id+'/feeds/' + date)
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+  
+          setTitle(json.title)
+          setComment(json.comment)
+          setTags(json.tags)
+          setPhotos(json.S3Object.Key)
+          console.log("사진사진사진" + photos)
+        })
+        .catch((error) => {
+          console.error(error);
+      });
+  
+       //console.log("fffff" + this.title)
+  }, []) // 무한루프 방지용 2번째 변수 []
+
+  console.log("ss: " + selectedDate );
+
+  const bucket = "dada-" + ObjectFile.user.id;
+
+  const predate = selectedDate.toJSON().split('T');
+  const pretime = predate[1].split('Z')[0].split(',');
+  const prefix = predate[0] + '/' + pretime + '/';
+
+  viewAlbum(bucket,prefix);
 
   return (
     <View style={styles.main}>
@@ -53,11 +95,12 @@ const feedDetail = ({ navigation }: Props) => {
 
         {/* 내용 */}
         <View style={{ backgroundColor: 'white', margin: 5, flex: 1 }}>
-          <Text style={styles.title}>이때 날씨 정말 좋았지</Text>
+          <Text style={styles.title}>{title}</Text>
 
-          <Text style={styles.tag}># 날씨 지렸다. # 그냥 하는 말</Text>
+          <Text style={styles.tag}>{tags + ""}# 날씨 지렸다. # 그냥 하는 말</Text>
 
           <Text style={styles.content}>
+            {comment}
             날이 정말 좋았따아아 내용을 작성하는 부분인데 너무 횡해 보여서 그냥 아무말이나 등록해놓은건데
             더이상 할말도 없고.
           </Text>
@@ -95,6 +138,68 @@ const feedDetail = ({ navigation }: Props) => {
   )
 }
 export default feedDetail
+
+// Show the photos that exist in an album.
+function viewAlbum(BucketName: string | number | boolean, PrefixName: string | number | boolean) {
+  const s3 = new AWS.S3();
+  
+  var albumPhotosKey = encodeURIComponent(BucketName) + '/';
+
+  // 버킷 리스트 확인
+  // s3.listBuckets(function(err: any, data: { Buckets: any; }) {
+  //   if (err) {
+  //     console.log("Error", err);
+  //   } else {
+  //     console.log("Success", data.Buckets);
+  //   }
+  // });
+
+  var bucketParamsforAcl={
+    Bucket : BucketName
+  }
+  var bucketParams = {
+    Bucket : BucketName,
+    Prefix : PrefixName
+  };
+
+  //읽기 권한 부여
+  s3.getBucketAcl(bucketParamsforAcl, function(err: any, data: { Grants: any; }) {
+    if (err) {
+      console.log("Error ACL", err);
+    } else if (data) {
+      console.log("Success ACL", data.Grants);
+    }
+  });
+
+  s3.listObjects(bucketParams, function(err: any, data: any) {
+    if (err) {
+      console.log("Error list", err);
+    } else {
+      console.log("Success list", data);
+
+      // console.log(s3.endpoint);
+      // console.log(s3.endpoint.href);
+      var href = s3.endpoint.href;
+      
+      var bucketUrl = href + BucketName + '/';
+    // /2020-11-09/00:00:00.000/image.jpg
+
+
+      var photos = data.Contents.map(function(photo: { Key: any; }) {
+        var photoKey = photo.Key;
+        
+        var photoUrl = bucketUrl + encodeURIComponent(photoKey);
+        
+        //console.log("ss!!!!!" + photos);
+        console.log("사진:" + photoUrl);
+        
+      });      
+
+      
+    }
+    //console.log(photos);
+  });
+}
 
 const styles = StyleSheet.create({
   main: {
