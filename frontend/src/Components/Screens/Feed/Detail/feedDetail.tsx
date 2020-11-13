@@ -30,7 +30,7 @@ const feedDetail = ({ navigation }: Props) => {
   return (
     <View style={styles.main}>
       <View style={styles.mainIn}>
-        {/* 등록된 이미지 */}
+        {/* 등록된 이미지 */}     
         <View style={{flex: 0.6}}>
           <FlatListSlider
             data={images}
