@@ -22,12 +22,12 @@ const createFeed = ({ navigation }: Props) => {
       mediaType: 'photo',
       inculdeExif: true
     }).then(images => {
-      console.log(images);
-      
+
       for (var i = 0; i < images.length; i++) {
+        tmp.append('파일명', images[i].path.substring(images[i].path.lastIndexOf("/") + 1));
         tmp.append('path', images[i].path);
       }
-      console.log('tmp',tmp)
+      
       navigation.navigate('feedCreate', tmp)
     }).catch(() => {
       console.log('사진을 불러오는데 실패하였습니다');
