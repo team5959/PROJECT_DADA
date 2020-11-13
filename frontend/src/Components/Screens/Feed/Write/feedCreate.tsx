@@ -58,7 +58,7 @@ const editFeed = ({ route, navigation }: Props, props: { info: any }) => {
 
   const handleConfirm = (date: React.SetStateAction<boolean>) => {
     console.log('선택된 날짜',date, "///// 타입", typeof(date))
-    setDiaryDate(date)
+    setDiaryDate(date.getFullYear() + '.' + date.getDay())
     console.log('fetch 날짜', diaryDate)
     hideDatePicker();
   };
@@ -155,7 +155,7 @@ const editFeed = ({ route, navigation }: Props, props: { info: any }) => {
                 //여기 피드 등록하는 함수를 넣습니다.
                 FolderCreate(require('../../../../App').BucketID);
                 PicUpload(require('../../../../App').BucketID, routeItem);
-                contentDynamoDBUpload()
+                // contentDynamoDBUpload()
                 console.log('title', title)
                 console.log('content', content)
                 navigation.navigate('Feed')
