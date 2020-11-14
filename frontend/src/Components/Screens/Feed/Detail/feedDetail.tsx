@@ -35,7 +35,6 @@ const FeedDetail = ({route, navigation}) => {
       })
       .catch((error) => {
         console.error(error);
-        // TODO 에러 발생 알림, 이전 페이지로 돌아가기
       });
   }, []); // 무한루프 방지용 2번째 변수 []
 
