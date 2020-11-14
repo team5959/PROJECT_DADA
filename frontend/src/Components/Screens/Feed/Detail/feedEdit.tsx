@@ -1,132 +1,158 @@
-import React, { useState } from 'react'
-import { StyleSheet, View, ScrollView, Dimensions, Text } from 'react-native'
-// import Icon from 'react-native-vector-icons/FontAwesome';
-import { NavigationState } from '@react-navigation/native';
-import { Icon, Input, Button } from 'react-native-elements'
+import React, {useState} from 'react';
+import {StyleSheet, View, ScrollView, Alert} from 'react-native';
+import {Icon, Input} from 'react-native-elements';
+import Loader from '~/Components/Util/Loader';
 
-var width = Dimensions.get('window').width - Dimensions.get('window').width*0.868;
-
-const customImg = [
-  "https://firebasestorage.googleapis.com/v0/b/lotapp-9e84d.appspot.com/o/aster.jpg?alt=media&token=166e66b0-9c8e-4803-918e-25762c58dbda",
-  "https://firebasestorage.googleapis.com/v0/b/lotapp-9e84d.appspot.com/o/fan.jpg?alt=media&token=b419d507-9de8-4c4c-97e3-6b4eb2202e68",
-  "https://firebasestorage.googleapis.com/v0/b/lotapp-9e84d.appspot.com/o/stone.jpg?alt=media&token=e9d41537-7f26-4bfd-86eb-c2ef6fc58a9c"
-];
-
-interface Props {
-  navigation: NavigationState
-}
-
-export default function feedEdit({ navigation }: Props) {
-  const [title, setTitle] = useState('');
-  const [tag, setTag] = useState('');
-  const [content, setContent] = useState('');
-
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [diaryDate, setDiaryDate] = useState(false);
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date: React.SetStateAction<boolean>) => {
-    console.log('선택된 날짜', date)
-    setDiaryDate(date)
-    hideDatePicker();
-  };
-
-
-  
+const FeedEdit = ({route, navigation}) => {
+  const {
+    title: originalTitle,
+    tags: originalTags,
+    contents: originalContents,
+  } = route.params;
+  const [title, setTitle] = useState(originalTitle);
+  const [tags, setTags] = useState('#' + originalTags.join(' #'));
+  const [contents, setContents] = useState(originalContents);
+  const [isLoading, setLoading] = useState(false);
 
   return (
     <View style={styles.main}>
+      <Loader isLoading={isLoading} />
       <View style={styles.mainIn}>
         <ScrollView>
-          <View style={{ flexDirection: 'row' }}>
-
-            {/* 선택한 이미지 */}
-            <View style={{marginRight: 10}}>
-              {/* <ImagesSwiper
-                images={customImg}
-                // autoplay={true}
-                // autoplayTimeout={1.5}
-                showsPagination={true}
-                width={width}
-                height={width}
-              /> */}
-            </View>
-
-            <Input
-              style={styles.title}
-              placeholder="title"
-              leftIcon={{ type: 'font-awesome', name: 'calendar-o' }}
-              onChangeText={value => setTitle(value)}
-            />
-          </View>
+          <Input
+            style={styles.title}
+            label="title"
+            leftIcon={{type: 'font-awesome', name: 'calendar-o'}}
+            onChangeText={(value) => setTitle(value)}>
+            {title}
+          </Input>
 
           <Input
+            multiline
             style={styles.tag}
-            placeholder="tag"
-            leftIcon={{ type: 'font-awesome', name: 'tag' }}
-            onChangeText={value => setTag(value)}
-          />
+            label="tags"
+            leftIcon={{type: 'font-awesome', name: 'tag'}}
+            onChangeText={(value) => setTags(value)}>
+            {tags}
+          </Input>
+
           <Input
             multiline
             style={styles.content}
-            placeholder="content"
-            leftIcon={{ type: 'font-awesome', name: 'align-justify' }}
-            onChangeText={value => setContent(value)}
-          />
-          
-
-          
+            label="contents"
+            leftIcon={{type: 'font-awesome', name: 'align-justify'}}
+            onChangeText={(value) => setContents(value)}>
+            {contents}
+          </Input>
         </ScrollView>
       </View>
 
-
       {/* 하단 아이콘설정 */}
-      <View style={{ flexDirection: 'row-reverse', position: 'absolute', right: 0, bottom: 0 }}>
+      <View
+        style={{
+          flexDirection: 'row-reverse',
+          position: 'absolute',
+          right: 0,
+          bottom: 0,
+        }}>
         <Icon
           raised
-          name='check'
-          type='font-awesome'
-          color='black'
+          name="check"
+          type="font-awesome"
+          color="black"
           onPress={() => {
-            alert('완료')
-            console.log('피드 등록')
-            //여기 피드 등록하는 함수를 넣습니다.
-            navigation.navigate('Feed')
+            const parsedTags: Array<string> = tags.split(' #');
+            if (parsedTags.length >= 1) {
+              parsedTags[0] = parsedTags[0].slice(1);
+            }
+            setLoading(true);
+            uploadToDB({
+              title,
+              contents,
+              tags: parsedTags,
+            })
+              .then(() => {
+                setLoading(false);
+                Alert.alert('DADA가 알려드립니다.', '수정이 완료되었습니다.', [
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      navigation.navigate('FeedDetail');
+                    },
+                  },
+                ]);
+              })
+              .catch(() => {
+                setLoading(false);
+                Alert.alert(
+                  'DADA가 알려드립니다.',
+                  '수정 중 오류가 생겼습니다. \n다시 시도해주세요.',
+                  [
+                    {
+                      text: 'OK',
+                    },
+                  ],
+                );
+              });
           }}
           size={23}
         />
       </View>
-
     </View>
-  )
-}
+  );
+};
+export default FeedEdit;
+
+const uploadToDB = async (feed: {
+  title: string;
+  contents: string;
+  tags: Array<string>;
+}) => {
+  return new Promise((resolve, reject) => {
+    fetch(
+      // `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${ObjectFile.user.id}/feeds/${date}`,
+      `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${12345}/feeds/${'2020-11-12T14:08:11'}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(feed),
+      },
+    )
+      .then((response) => {
+        if (response.status !== 200) {
+          console.error('피드 수정 중 에러 발생', response);
+          reject();
+        }
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject();
+      });
+  });
+};
 
 const styles = StyleSheet.create({
-  content:{
-    fontFamily: "BMHANNAPro",
-  },  
+  content: {
+    fontFamily: 'BMHANNAPro',
+  },
   main: {
     flex: 1,
-    backgroundColor: 'ivory'
+    backgroundColor: 'ivory',
   },
   mainIn: {
     margin: 7,
     marginTop: 10,
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   title: {
     marginTop: 10,
-    fontFamily: "BMHANNAPro",
+    fontFamily: 'BMHANNAPro',
   },
   tag: {
-    fontFamily: "BMHANNAPro",
-  }
-})
+    fontFamily: 'BMHANNAPro',
+  },
+});
