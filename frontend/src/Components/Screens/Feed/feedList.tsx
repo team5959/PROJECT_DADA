@@ -107,9 +107,9 @@ const HomeScreen = ({ navigation }: Props) => {
         </View>)
         :
         (feeds.map((feed, i) => {
-          console.log("으악" + feed.date);
-          console.log(selectedDate);
-          console.log("피드정보 : " + feed.S3Object.Key);
+          //console.log("으악" + feed.date);
+          //console.log(selectedDate);
+          //console.log("피드정보 : " + feed.S3Object.Key);
           return <ScrollView style={{ flex: 1, margin: 7 }} key={i}>
             <TouchableOpacity
               onPress={() => {
@@ -190,7 +190,7 @@ function viewAlbum(BucketName: string | number | boolean) {
 
         
         const d = photo.Key.split('/');
-        console.log("디렉토리만 떠주세요!!!!!" + d[0]);
+        //console.log("디렉토리만 떠주세요!!!!!" + d[0]);
         // console.log("dd!!!!!" + photoUrl);
         mark.push(d[0]);
       });      
