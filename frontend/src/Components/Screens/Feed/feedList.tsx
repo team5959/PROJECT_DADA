@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, ImageBackground, Alert } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ImageBackground, } from 'react-native'
 import { NavigationState } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import CalendarStrip from 'react-native-slideable-calendar-strip';
-import { Button, Icon } from 'react-native-elements'
+import { Icon } from 'react-native-elements'
 import ObjectFile from '~/Components/ObjectFile';
 
 const AWS = require('aws-sdk')
@@ -129,10 +129,9 @@ const HomeScreen = ({ navigation }: Props) => {
                   marginBottom: 10,
                 }}
               >
-                <Text style={styles.textInCard}>{
-                  JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의
-                첫 번째 추억{'\n'}
-                  <Text style={styles.tag}>{feed.title}  ~의 추억 대신 이거 제목으로 쓰면 되려나요? {'\n'}</Text>
+                <Text style={styles.textInCard}>{feed.title}{'\n'}
+                  {/* 가피드때는 이걸로 ? */}
+                  {/* {JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 첫 번째 추억{'\n'} */}
                   <Text style={styles.tag}>#야... #이거 개어려움</Text>
                 </Text>
               </ImageBackground>
