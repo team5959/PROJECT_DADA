@@ -102,11 +102,11 @@ const FeedDetail = ({route, navigation}) => {
           type="font-awesome"
           color="#F78C75"
           onPress={() => {
-            console.log('피드 지운다.')
+            console.log('피드 지운다.');
             // 여기에 피드 삭제 메서드가 들어갑니다.
             setTimeout(function () {
-              deleteDynamoDBContent(ObjectFile.user.id, date)
-            }, 2000) // 사진 여러개면 업로드 동안 시간 걸려서 타이머 
+              deleteDynamoDBContent(ObjectFile.user.id, date);
+            }, 2000); // 사진 여러개면 업로드 동안 시간 걸려서 타이머
           }}
           size={23}
         />
@@ -117,22 +117,27 @@ const FeedDetail = ({route, navigation}) => {
 export default FeedDetail;
 
 // // DynamoDB 삭제
-function deleteDynamoDBContent(duserid: any, ddate: any) {  
+function deleteDynamoDBContent(duserid: any, ddate: any) {
   var fetchCall = function () {
-    return fetch(`https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${duserid}/feeds/${ddate}`, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'content-type': 'application/json'
+    return fetch(
+      `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${duserid}/feeds/${ddate}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'content-type': 'application/json',
+        },
       },
+    );
+  };
+  fetchCall()
+    .then((res) => {
+      console.log('Delete Feed Success');
+      console.log(res);
     })
-  }
-  fetchCall().then((res) => {
-    console.log("Delete Feed Success")
-    console.log(res)
-  }).catch((err) => {
-    console.log("Delete Feed Err")
-  })
+    .catch((err) => {
+      console.log('Delete Feed Err');
+    });
 }
 
 const styles = StyleSheet.create({
