@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, ImageBackground, Alert } from 'react-native'
 import { NavigationState } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import CalendarStrip from 'react-native-slideable-calendar-strip';
@@ -16,22 +16,21 @@ AWS.config.update({
 
 const Stack = createStackNavigator();
 
+console.log('###################################피드 리스트 페이지 시작###################################')
+
 interface Props {
   navigation: NavigationState 
 }
-
 const HomeScreen = ({ navigation }: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isData, setIsData] = useState(true);
+  console.log('###################홈스크린함수 시작###################')
+  
  
   const [feeds, setFeeds] = useState([]);
   console.log('selectedDate:', selectedDate)
 
- 
-
   useEffect(() => {
     viewAlbum(require('../../../App').BucketID);
-
   })
   
   const getFeedList = ( date: Date ) => {
@@ -42,134 +41,114 @@ const HomeScreen = ({ navigation }: Props) => {
     .then((response) => response.json())
     .then((json) => {
       console.log("response :" + JSON.stringify(json));
-
       setFeeds(json)
       return json;
     })
     .catch((error) => {
       console.error(error);
   });
-
-    
   }  
-    
-  // axios 테스트 파일(정상 작동 확인완료) 
-  const fetchTest = () => {
-    return fetch('https://reactnative.dev/movies.json')
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json)
-        return json.movies;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
-  if (isData) {
-    return (
-
-      <View style={styles.main}>
-        {/* 상단 달력 */}
-        <View style={{ backgroundColor: 'white' }}>
-          <CalendarStrip
-            // showWeekNumber
-            selectedDate={selectedDate}
-            onPressDate={(date: React.SetStateAction<Date>) => {
-              //console.log('date:', date)
-              setSelectedDate(date);
-              const tmp = getFeedList(date);
-              //console.log("tmp :" + tmp);
-              //console.log('selectedDate:', selectedDate)
-            }}
-            // onPressGoToday={(today) => {
-            //   setSelectedDate('today:',today);
-            // }}
-            // onSwipeDown={() => {
-            //   alert('onSwipeDown');
-            // }}
-            markedDate={['2020-11-02', '2020-11-09']}
-            weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
-          />
-        </View>
-
-
-        {/* map으로 돌릴부분 */}
-        {feeds.map((feed, i)=>{
-
-          console.log("사진url :" + feed.S3Object.Key);
-          return <ScrollView style={{ flex: 1, margin: 7}} key={i}>
+  
+  return (
+    <View style={styles.main}>
+      {/* 상단 달력 */}
+      <View style={{ backgroundColor: 'white' }}>
+        <CalendarStrip
+          // showWeekNumber
+          selectedDate={selectedDate}
+          onPressDate={(date: React.SetStateAction<Date>) => {
+            console.log('date:', date)
+            setSelectedDate(date);
+            const tmp = getFeedList(date);
+            console.log("tmp :" + tmp);
+            console.log('선택된 날짜:', selectedDate)
+          }}
+          // onPressGoToday={(today) => {
+          //   setSelectedDate('today:',today);
+          // }}
+          // onSwipeDown={() => {
+          //   alert('onSwipeDown');
+          // }}
+          markedDate={['2020-11-02', '2020-11-09']}
+          weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
+        />
+      </View>
+      { feeds[0] === undefined ? 
+        (<View style={{ flex: 1, margin: 7 }}>
+          {/* 일기 작성 유도 피드 */}
           <TouchableOpacity
-            onPress={()=>{
-              navigation.navigate('FeedDetail',{
-                selectedDate  : selectedDate,
-                date : feed.date
-              })
-            }}
-          >
-            <ImageBackground 
-              source={{ uri: 'https://dada-107302456767622872057.s3.amazonaws.com/2020-11-09/00%3A00%3A00.000/20201109_090840.jpg' }}
+            onPress={() => {
+              alert('가피드 생성')
+            }}>
+            <ImageBackground
+              source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
               style={{
                 width: '100%',
-                height: 160, 
-                backgroundColor: 'skyblue',
+                height: 160,
+                backgroundColor: 'navy',
                 borderRadius: 20,
                 marginBottom: 10,
-              }}
+              }}              
             >
-              <Text style={styles.textInCard}>
-                {feed.title}{'\n'}
-                {JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}일 의 {i+1}번째 추억
-                <Text style={styles.tag}>
-                  {feed.tags.map((tag,i)=> {
-                    return <Text key = {i}>#{tag}</Text>;
-                })}
-                </Text>    
-              </Text>
-                   
-              
-              
+              <Text style={styles.textInCard}>아직 작성한 일기가 없네요! {'\n'}
+                <Text style={styles.tag}>#일기를 써줄게요!</Text>
+              </Text>              
             </ImageBackground>
           </TouchableOpacity>
+        </View>)
+        :
+        (feeds.map((feed, i) => {
+          console.log("으악" + feed.date);
+          console.log(selectedDate);
+          console.log(feed.date);
+          return <ScrollView style={{ flex: 1, margin: 7 }} key={i}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('FeedDetail', {
+                  selectedDate: selectedDate,
+                  date: feed.date
+                })
+              }}
+            >
+              <ImageBackground
+                source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+                style={{
+                  width: '100%',
+                  height: 160,
+                  backgroundColor: 'skyblue',
+                  borderRadius: 20,
+                  marginBottom: 10,
+                }}
+              >
+                <Text style={styles.textInCard}>{
+                  JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의
+                첫 번째 추억{'\n'}
+                  <Text style={styles.tag}>{feed.title}  ~의 추억 대신 이거 제목으로 쓰면 되려나요? {'\n'}</Text>
+                  <Text style={styles.tag}>#야... #이거 개어려움</Text>
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          </ScrollView>
+        }))
+      }       
 
-          
-        </ScrollView>
-          
-          
-          ;
-        })}
-        
+      <View style={styles.addFeed}>
+        <Icon
+          raised
+          name='add'
+          type='ionicon'
+          color='black'
+          size={20}
+          reverseColor='black'
+          onPress={() => {
+            console.log('사진 선택시작')
+            navigation.navigate('photoSelectFeed')
+          }} />
+      </View>
+    </View>
+  )
 
-        <View style={styles.addFeed}>
-          <Icon
-            raised
-            name='add'
-            type='ionicon'
-            color='black'
-            size={20}
-            reverseColor='black'
-            onPress={() => {
-              console.log('사진 선택시작')
-              navigation.navigate('photoSelectFeed')
-            }} />
-        </View>
-      </View>
-    )
-  } else {
-    return (
-      
-      <View>
-        <Text>아직 피드가 없네요 작성해보세요!</Text>
-        <TouchableOpacity>
-          <Image source={{uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg'}}
-          style={{width: 400, height: 400}} 
-        />
-        </TouchableOpacity>
-        
-      </View>
-    )
-  }
-  
 }
 
 function getHtml(template: any[]) {
@@ -207,9 +186,9 @@ function viewAlbum(BucketName: string | number | boolean) {
 
   s3.listObjects(bucketParams, function(err: any, data: any) {
     if (err) {
-      console.log("Error", err);
+      // console.log("Error", err);
     } else {
-      console.log("버킷 데이터 : ", data);
+      // console.log("버킷 데이터 : ", data);
 
       console.log(s3.endpoint);
       console.log(s3.endpoint.href);
@@ -222,15 +201,10 @@ function viewAlbum(BucketName: string | number | boolean) {
         
         var photoUrl = bucketUrl + encodeURIComponent(photoKey);
         
-        console.log("ss!!!!!" + photos);
-        console.log("dd!!!!!" + photoUrl);
-        
-      
+        // console.log("ss!!!!!" + photos);
+        // console.log("dd!!!!!" + photoUrl);
       });      
-
-      
     }
-    //console.log(photos);
   });
 
 }
