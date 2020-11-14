@@ -76,11 +76,11 @@ const HomeScreen = ({ navigation }: Props) => {
             // showWeekNumber
             selectedDate={selectedDate}
             onPressDate={(date: React.SetStateAction<Date>) => {
-              console.log('date:', date)
+              //console.log('date:', date)
               setSelectedDate(date);
               const tmp = getFeedList(date);
-              console.log("tmp :" + tmp);
-              console.log('selectedDate:', selectedDate)
+              //console.log("tmp :" + tmp);
+              //console.log('selectedDate:', selectedDate)
             }}
             // onPressGoToday={(today) => {
             //   setSelectedDate('today:',today);
@@ -96,9 +96,8 @@ const HomeScreen = ({ navigation }: Props) => {
 
         {/* map으로 돌릴부분 */}
         {feeds.map((feed, i)=>{
-          console.log("으악" + feed.date);
-          console.log(selectedDate);
-          console.log(feed.date);
+
+          console.log("사진url :" + feed.S3Object.Key);
           return <ScrollView style={{ flex: 1, margin: 7}} key={i}>
           <TouchableOpacity
             onPress={()=>{
@@ -109,7 +108,7 @@ const HomeScreen = ({ navigation }: Props) => {
             }}
           >
             <ImageBackground 
-              source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+              source={{ uri: 'https://dada-107302456767622872057.s3.amazonaws.com/2020-11-09/00%3A00%3A00.000/20201109_090840.jpg' }}
               style={{
                 width: '100%',
                 height: 160, 
@@ -118,11 +117,14 @@ const HomeScreen = ({ navigation }: Props) => {
                 marginBottom: 10,
               }}
             >
-              <Text style={styles.textInCard}>{
-                JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 
-                첫 번째 추억{'\n'}
-                <Text style={styles.tag}>{feed.title}  ~의 추억 대신 이거 제목으로 쓰면 되려나요? {'\n'}</Text>    
-                <Text style={styles.tag}>#야... #이거 개어려움</Text>    
+              <Text style={styles.textInCard}>
+                {feed.title}{'\n'}
+                {JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}일 의 {i+1}번째 추억
+                <Text style={styles.tag}>
+                  {feed.tags.map((tag,i)=> {
+                    return <Text key = {i}>#{tag}</Text>;
+                })}
+                </Text>    
               </Text>
                    
               
