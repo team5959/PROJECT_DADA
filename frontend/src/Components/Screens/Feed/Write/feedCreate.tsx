@@ -132,7 +132,7 @@ const feedCreate = ({ route, navigation }: Props, props: { info: any }) => {
                 alert('완료')
                 console.log('피드 등록')
                 //여기 피드 등록하는 함수를 넣습니다.
-                FolderCreate(require('../../../../App').BucketID);
+                //FolderCreate(require('../../../../App').BucketID); // 이미지 업로드 하면 알아서 파일 생성
                 PicUpload(require('../../../../App').BucketID, routeItem)
                 setTimeout(function(){
                   contentDynamoDBUpload(require('../../../../App').BucketID, routeItem)
@@ -166,23 +166,23 @@ const styles = StyleSheet.create({
   },
 })
 
-// 날짜로 폴더 생성 (YYYY.MM.DD/)
-function FolderCreate(BucketName: string | number | boolean) {
-  const s3 = new AWS.S3();
+// 날짜로 폴더 생성 (YYYY-MM-DD/HH:MM:SS.SSS)
+// function FolderCreate(BucketName: string | number | boolean) {
+//   const s3 = new AWS.S3();
 
-  var uploadParams = {
-    Bucket : BucketName,
-    Key : currentDate + '/'
-  };
+//   var uploadParams = {
+//     Bucket : BucketName,
+//     Key : udate.slice(1,11) + '/' + udate.slice(12,24)
+//   };
 
-  s3.putObject(uploadParams, function(err: any, data: any){
-    if(err){
-      console.log("FILE Create Err", err);
-    }else {
-      console.log("FILE Create Success", data);
-    }
-  });
-}
+//   s3.putObject(uploadParams, function(err: any, data: any){
+//     if(err){
+//       console.log("FILE Create Err", err);
+//     }else {
+//       console.log("FILE Create Success", data);
+//     }
+//   });
+// }
 
 // 사진첩에서 체크한 사진 업로드
 async function PicUpload(BucketName: string | number | boolean, datas : any){
@@ -195,7 +195,7 @@ async function PicUpload(BucketName: string | number | boolean, datas : any){
     
     var upload = new AWS.S3.ManagedUpload({
       params: {
-        Bucket: BucketName + "/" + currentDate,
+        Bucket: BucketName + "/" + udate.slice(1,11) + "/" + udate.slice(12,24),
         Key: datas._parts[i][1],
         Body: arrayBuffer,
         ContentType: 'image/jpeg',
@@ -225,7 +225,7 @@ function contentDynamoDBUpload(BucketName : any, datas: any){
   for(var i = 0; i < datas._parts.length; i += 2){ // photos 채워넣기
     const param = {}
     param['Bucket'] = BucketName
-    param['Key'] = currentDate + "/" + datas._parts[i][1]
+    param['Key'] = udate.slice(1,11) + "/" + udate.slice(12,24) + "/" + datas._parts[i][1]
     array.push(param)
   }
 
@@ -237,7 +237,7 @@ function contentDynamoDBUpload(BucketName : any, datas: any){
         'content-type' : 'application/json'
       },
       body: JSON.stringify({
-        date: udate,
+        date: udate.slice(1, 20),
         title: utitle,
         contents: ucontent,
         photos: array,
