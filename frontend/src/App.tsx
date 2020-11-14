@@ -100,6 +100,8 @@ const App = () => {
               <Text style={styles.span}>D</Text>A
             </Text>
           </View>
+
+
           <View style={styles.footer}>
             <GoogleSigninButton
               style={styles.googleButton}
