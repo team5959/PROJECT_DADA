@@ -1,35 +1,38 @@
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
-import { Text, View } from 'react-native'
-import {  NavigationState } from '@react-navigation/native'
-import { ThemeProvider, SearchBar } from 'react-native-elements';
+import React, {useState} from 'react';
+import {Text, View} from 'react-native';
+import {NavigationState} from '@react-navigation/native';
+import {ThemeProvider, SearchBar} from 'react-native-elements';
 
 interface Props {
-  navigation: NavigationState,
+  navigation: NavigationState;
 }
 
-const UserScreen = ({ navigation }: Props) => {
+const UserScreen = ({navigation}: Props) => {
   // const { userIdx, userName, userLastName } = route.params; //전달받은 값(route)
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState('');
 
   const updateSearch = (search) => {
-    setSearch( search );
+    setSearch(search);
   };
 
   return (
     <View>
-      <ThemeProvider 
-      theme ={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'white'
-      }}
-      >
+      <ThemeProvider
+        theme={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+        }}>
         <SearchBar
-          containerStyle={{ backgroundColor: 'skyblue', borderTopColor: 'white', borderBottomColor: 'white' }}
-          inputStyle={{ backgroundColor: 'white'}}
-          inputContainerStyle={{ backgroundColor: 'white'}}
+          containerStyle={{
+            backgroundColor: 'skyblue',
+            borderTopColor: 'white',
+            borderBottomColor: 'white',
+          }}
+          inputStyle={{backgroundColor: 'white'}}
+          inputContainerStyle={{backgroundColor: 'white'}}
           placeholder="Search Here..."
           onChangeText={updateSearch}
           value={search}
@@ -38,7 +41,7 @@ const UserScreen = ({ navigation }: Props) => {
         />
       </ThemeProvider>
     </View>
-  )
-}
+  );
+};
 
-export default UserScreen
+export default UserScreen;
