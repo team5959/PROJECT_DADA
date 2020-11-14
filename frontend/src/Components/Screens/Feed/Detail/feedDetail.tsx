@@ -86,8 +86,12 @@ const FeedDetail = ({route, navigation}) => {
           type="font-awesome"
           color="#494747"
           onPress={() => {
-            console.log('피드 수정한다.');
-            navigation.navigate('FeedEdit');
+            navigation.navigate('FeedEdit', {
+              title,
+              tags,
+              contents,
+              date,
+            });
           }}
           size={23}
         />
