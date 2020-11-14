@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, ScrollView, Image, Alert} from 'react-native';
 import {Icon, Input, Button} from 'react-native-elements';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import moment from 'moment';
 import fs from 'react-native-fs';
 import {decode} from 'base64-arraybuffer';
 import ObjectFile from '~/Components/ObjectFile';
