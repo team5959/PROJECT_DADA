@@ -6,7 +6,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment'; 
 import fs from 'react-native-fs'
 import { decode } from 'base64-arraybuffer';
-import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
+import ObjectFile from '~/Components/ObjectFile';
 
 var width = Dimensions.get('window').width - Dimensions.get('window').width * 0.868;
 
@@ -17,8 +17,17 @@ const images = [
   },
 ]
 
+const AWS = require('aws-sdk')
+AWS.config.update({
+  region: ObjectFile.aws.region,
+  accessKeyId: ObjectFile.aws.accessKeyId,
+  secretAccessKey: ObjectFile.aws.secretAccessKey
+});
+
 let currentDate = moment().format("YYYY.MM.DD");
-let datee = ""
+let utitle = ""
+let ucontent = ""
+let udate = ""
 
 interface Props {
   navigation: NavigationState,
@@ -27,7 +36,7 @@ interface Props {
 
 const feedCreate = ({ route, navigation }: Props, props: { info: any }) => {
   const routeItem  = route.params;
-  console.log('넘어온 routeItem', routeItem)
+  //console.log('넘어온 routeItem', routeItem)
   
   useEffect(() => {
   })
@@ -57,10 +66,10 @@ const feedCreate = ({ route, navigation }: Props, props: { info: any }) => {
 
   const handleConfirm = (date: React.SetStateAction<boolean>) => {
     console.log('선택된 날짜',date)
-    console.log('fetch 날짜', JSON.stringify(date).slice(1, 20))
-    datee = JSON.stringify(date)
-    console.log('이거라도 되라', datee)
     setDiaryDate(date)
+    udate = JSON.stringify(date)
+    utitle = JSON.stringify(title)
+    ucontent = JSON.stringify(content)
     hideDatePicker();
   };
 
@@ -88,9 +97,7 @@ const feedCreate = ({ route, navigation }: Props, props: { info: any }) => {
             multiline
             placeholder="content"
             leftIcon={{ type: 'font-awesome', name: 'align-justify' }}
-            onChangeText={(value) => {
-              setContent(value)
-            }}
+            onChangeText={value => setContent(value)}
           />
 
           {/* 일자 선택 */}
@@ -127,9 +134,9 @@ const feedCreate = ({ route, navigation }: Props, props: { info: any }) => {
                 //여기 피드 등록하는 함수를 넣습니다.
                 FolderCreate(require('../../../../App').BucketID);
                 PicUpload(require('../../../../App').BucketID, routeItem)
-                contentDynamoDBUpload(require('../../../../App').BucketID, routeItem, title, content, datee)
-                console.log('title', title)
-                console.log('content', content)
+                setTimeout(function(){
+                  contentDynamoDBUpload(require('../../../../App').BucketID, routeItem)
+                }, 2000) // 사진 여러개면 업로드 동안 시간 걸려서 타이머 
                 navigation.navigate('Feed')
               }}
               size={23}
@@ -208,52 +215,40 @@ async function PicUpload(BucketName: string | number | boolean, datas : any){
 }
 
 // DynamoDB에 title, content 저장
-async function contentDynamoDBUpload(BucketName: any, datas: any, title: any, content: any, datee : any){
+function contentDynamoDBUpload(BucketName : any, datas: any){
 
-  const param = {};
-  console.log('첫번째 파람스', param)
-  
-  param['method'] = 'POST'
-  param['header'] = {'content-type':'application/json'}
+  const userid = JSON.stringify(require('../../../../App').BucketID).slice(6, 27)
 
-  console.log('두번째 파람스', param)
-  
-  const body = {};
-  body['title'] = title
-  body['content'] = content
-  body['date'] = datee
-  console.log('세번째 파람스', body)
+  const array = new Array()
 
-  param['body'] = body
-  console.log('네번째 파람스', param)
-
-  const photos = new Array()
-  for(var i = 0; i < datas._parts.length; i+=2) {
-    const photo = {};
-    // console.log('버킷이름', BucketName) // 정상 확인
-    photo['Bucket'] = BucketName
-    photo['Key'] = BucketName + "/" + currentDate + "/" + datas._parts[i][1]
-
-    photos.push(photo)
+  for(var i = 0; i < datas._parts.length; i += 2){ // photos 채워넣기
+    const param = {}
+    param['Bucket'] = BucketName
+    param['Key'] = currentDate + "/" + datas._parts[i][1]
+    array.push(param)
   }
-  
-  // console.log('photos', photos)
 
-  body['photos'] = photos
-  
-
-  let userid = JSON.stringify(require('../../../../App').BucketID).slice(6, 27)
-
-  return fetch(`https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${userid}/feeds`, JSON.parse(JSON.stringify(param)))
-    .then((response) => {
-      console.log('제발 와져라', response)
+  var fetchCall = function(){
+    return fetch(`https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${userid}/feeds`, {
+      method: 'POST',
+      headers: {
+         Accept: 'application/json',
+        'content-type' : 'application/json'
+      },
+      body: JSON.stringify({
+        date: udate,
+        title: utitle,
+        contents: ucontent,
+        photos: array,
+      }),
     })
-    // .then((json) => {
-    //   console.log('json', json)
-    //   return json;
-    // })
-    .catch((error) => {
-      console.error(error);
-    });
-};
+  }
+
+  fetchCall().then((res)=> {
+    console.log("Create Feed Success")
+  }).catch((err) => {
+    console.log("Create Feed Err")
+  })
+  
+}
 export default feedCreate
