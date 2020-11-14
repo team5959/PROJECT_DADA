@@ -34,16 +34,9 @@ module.exports.update = (event, context, callback) => {
     params.UpdateExpression = params.UpdateExpression.concat(', title=:title')
   }
 
-  if (data['comment'] !== undefined) {
-    if (params['ExpressionAttributeNames'] === undefined) {
-      params['ExpressionAttributeNames'] = {
-        '#comment': 'comment'
-      }
-    } else {
-      params['ExpressionAttributeNames']['#comment'] = 'comment'
-    }
-    params.ExpressionAttributeValues[':comment'] = data['comment']
-    params.UpdateExpression = params.UpdateExpression.concat(', #comment=:comment')
+  if (data['contents'] !== undefined) {
+    params.ExpressionAttributeValues[':contents'] = data['contents']
+    params.UpdateExpression = params.UpdateExpression.concat(', contents=:contents')
   }
 
   dynamoDb.update(params, (error, result) => {
