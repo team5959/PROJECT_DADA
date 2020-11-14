@@ -100,6 +100,8 @@ const App = () => {
               <Text style={styles.span}>D</Text>A
             </Text>
           </View>
+
+
           <View style={styles.footer}>
             <GoogleSigninButton
               style={styles.googleButton}
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
   },
   googleButton: {
     width: dWidth*0.8,
-    height: 55,
+    height: dWidth*0.1,
   },
 });
 export default App;

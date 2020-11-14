@@ -13,8 +13,6 @@ import FeedDetail from './Screens/Feed/Detail/feedDetail'
 import FeedEdit from './Screens/Feed/Detail/feedEdit'
 import PhotoDetail from './Screens/Photo/photoDetail'
 import PhotoEdit from './Screens/Photo/photoEdit'
-import Feed from '../Components/main'
-import ObjectFile from './ObjectFile'
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -76,13 +74,17 @@ const main = (props: { info: any }, { navigation }: Props) => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
-          name='DADA' 
+          name='DADA'
           component={feedTabNavigation}
           info={userInfo}
           options={{ 
             headerTitleAlign: 'center',
-            headerStatusBarHeight: -10
+            headerStatusBarHeight: -10,
+            headerTitleStyle: {
+              fontFamily: "BMHANNAPro",
+            },           
           }}
+          
         />
         <Stack.Screen 
           name='photoSelectFeed'
@@ -90,7 +92,10 @@ const main = (props: { info: any }, { navigation }: Props) => {
           options={{
             // title: 'Diary',
             headerTitleAlign: 'center',
-            headerStatusBarHeight: -10
+            headerStatusBarHeight: -10,
+            headerTitleStyle: {
+              fontFamily: "BMHANNAPro",
+            }, 
           }}
         />
         <Stack.Screen 
@@ -100,8 +105,10 @@ const main = (props: { info: any }, { navigation }: Props) => {
           options={{
             // title: 'Diary',
             headerTitleAlign: 'center',
-            headerStatusBarHeight: -10
-            
+            headerStatusBarHeight: -10,
+            headerTitleStyle: {
+              fontFamily: "BMHANNAPro",
+            }, 
           }}
         />
 
@@ -112,7 +119,10 @@ const main = (props: { info: any }, { navigation }: Props) => {
           options={{
             // title: 'Diary',
             headerTitleAlign: 'center',
-            headerStatusBarHeight: -10
+            headerStatusBarHeight: -10,
+            headerTitleStyle: {
+              fontFamily: "BMHANNAPro",
+            }, 
           }}
         />
         <Stack.Screen
@@ -122,9 +132,9 @@ const main = (props: { info: any }, { navigation }: Props) => {
             // title: 'Diary',
             headerTitleAlign: 'center',
             headerStatusBarHeight: -10,
-            // headerTitleStyle: {
-            //   fontWeight: 'bold',
-            // },
+            headerTitleStyle: {
+              fontFamily: "BMHANNAPro",
+            }, 
           }}
         />
 
@@ -135,7 +145,10 @@ const main = (props: { info: any }, { navigation }: Props) => {
           options={{
             // title: 'Diary',
             headerTitleAlign: 'center',
-            headerStatusBarHeight: -10
+            headerStatusBarHeight: -10,
+            headerTitleStyle: {
+              fontFamily: "BMHANNAPro",
+            }, 
           }}
         />
         <Stack.Screen
@@ -144,7 +157,10 @@ const main = (props: { info: any }, { navigation }: Props) => {
           options={{
             // title: 'Diary',
             headerTitleAlign: 'center',
-            headerStatusBarHeight: -10
+            headerStatusBarHeight: -10,
+            headerTitleStyle: {
+              fontFamily: "BMHANNAPro",
+            }, 
           }}
         />
 
@@ -154,10 +170,7 @@ const main = (props: { info: any }, { navigation }: Props) => {
 }
 
 const styles = StyleSheet.create({
-  // search: {
-  //   flex: 1,
-  //   backgroundColor: 'red'
-  // }
+
 })
 
 export default main

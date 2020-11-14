@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native'
 import { Button } from 'react-native-elements';
-import { NavigationContainer, NavigationState } from '@react-navigation/native'
+import {  NavigationState } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { ThemeProvider, SearchBar } from 'react-native-elements';
 
@@ -19,34 +19,27 @@ const UserScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <ThemeProvider theme ={{
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'yellow'
-    }}>
-      <SearchBar
-        containerStyle={{ backgroundColor: 'green' }}
-        inputStyle={{ backgroundColor: 'ivory'}}
-        inputContainerStyle={{ backgroundColor: 'white'}}
-        placeholder="Search Here..."
-        onChangeText={updateSearch}
-        value={search}
-        round={true}
-        showLoading
-      />
-      
-      <Button
-        title="To DADA Screen"
-        type="outline"
-        onPress={() => {
-          navigation.navigate('Feed')
-        }}
-      />
-      {/* <Text>User Idx: {JSON.stringify(userIdx)}</Text>
-      <Text>User Name: {JSON.stringify(userName)}</Text>
-      { route.params.userLastName && <Text>User LastName: {JSON.stringify(userLastName)}</Text>} */}
-    </ThemeProvider>
+    <View>
+      <ThemeProvider 
+      theme ={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white'
+      }}
+      >
+        <SearchBar
+          containerStyle={{ backgroundColor: 'skyblue', borderTopColor: 'white', borderBottomColor: 'white' }}
+          inputStyle={{ backgroundColor: 'white'}}
+          inputContainerStyle={{ backgroundColor: 'white'}}
+          placeholder="Search Here..."
+          onChangeText={updateSearch}
+          value={search}
+          round={true}
+          showLoading
+        />
+      </ThemeProvider>
+    </View>
   )
 }
 
