@@ -144,8 +144,6 @@ const HomeScreen = ({ navigation }: Props) => {
 function viewAlbum(BucketName: string | number | boolean) {
   const s3 = new AWS.S3();
   
-  var albumPhotosKey = encodeURIComponent(BucketName) + '/';
-
   var bucketParams = {
     Bucket : BucketName
   };
@@ -158,42 +156,6 @@ function viewAlbum(BucketName: string | number | boolean) {
       data.Contents.map(function(photo: { Key: any; }) {       
         const d = photo.Key.split('/');
         mark.push(d[0]);
-      });      
-    }
-  });
-
-  var bucketParams = {
-    Bucket : BucketName
-  };
-
-  //읽기 권한 부여
-  s3.getBucketAcl(bucketParams, function(err: any, data: { Grants: any; }) {
-    if (err) {
-      console.log("Error", err);
-    } else if (data) {
-      console.log("Success", data.Grants);
-    }
-  });
-
-  s3.listObjects(bucketParams, function(err: any, data: any) {
-    if (err) {
-      // console.log("Error", err);
-    } else {
-      // console.log("버킷 데이터 : ", data);
-
-      console.log(s3.endpoint);
-      console.log(s3.endpoint.href);
-      var href = s3.endpoint.href;
-      
-      var bucketUrl = href + BucketName + '/';
-
-      var photos = data.Contents.map(function(photo: { Key: any; }) {
-        var photoKey = photo.Key;
-        
-        var photoUrl = bucketUrl + encodeURIComponent(photoKey);
-        
-        // console.log("ss!!!!!" + photos);
-        // console.log("dd!!!!!" + photoUrl);
       });      
     }
   });
