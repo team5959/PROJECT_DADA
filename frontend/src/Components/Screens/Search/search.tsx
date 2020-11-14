@@ -1,9 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native'
-import { Button } from 'react-native-elements';
 import {  NavigationState } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
 import { ThemeProvider, SearchBar } from 'react-native-elements';
 
 interface Props {

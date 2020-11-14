@@ -106,12 +106,10 @@ const HomeScreen = ({ navigation }: Props) => {
           </TouchableOpacity>
         </View>)
         :
-        (feeds.map((feed, i) => {
-          //console.log("으악" + feed.date);
-          //console.log(selectedDate);
-          //console.log("피드정보 : " + feed.S3Object.Key);
-          return <ScrollView style={{ flex: 1, margin: 7 }} key={i}>
-            <TouchableOpacity
+        (<ScrollView style={{ flex: 1, margin: 7 }} >
+          {feeds.map((feed, i) => {
+            return <TouchableOpacity
+              key={i}
               onPress={() => {
                 navigation.navigate('FeedDetail', {
                   selectedDate: selectedDate,
@@ -143,8 +141,9 @@ const HomeScreen = ({ navigation }: Props) => {
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
+          })}
           </ScrollView>
-        }))
+        )
       }       
 
       <View style={styles.addFeed}>
@@ -162,7 +161,6 @@ const HomeScreen = ({ navigation }: Props) => {
       </View>
     </View>
   )
-
 }
 
 function getHtml(template: any[]) {
@@ -190,7 +188,7 @@ function viewAlbum(BucketName: string | number | boolean) {
 
         
         const d = photo.Key.split('/');
-        //console.log("디렉토리만 떠주세요!!!!!" + d[0]);
+        // console.log("디렉토리만 떠주세요!!!!!" + d[0]);
         // console.log("dd!!!!!" + photoUrl);
         mark.push(d[0]);
       });      
