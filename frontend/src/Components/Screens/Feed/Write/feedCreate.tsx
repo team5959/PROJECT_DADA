@@ -1,27 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  Image,
-} from 'react-native';
-import {NavigationState} from '@react-navigation/native';
+import {View, StyleSheet, ScrollView, Image, Alert} from 'react-native';
 import {Icon, Input, Button} from 'react-native-elements';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import fs from 'react-native-fs';
 import {decode} from 'base64-arraybuffer';
 import ObjectFile from '~/Components/ObjectFile';
-
-const images = [
-  {
-    image:
-      'https://images.unsplash.com/photo-1567226475328-9d6baaf565cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
-    desc: 'Silent Waters in the mountains in midst of Himilayas',
-  },
-];
+import Loader from '~/Components/Util/Loader';
 
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -30,32 +15,16 @@ AWS.config.update({
   secretAccessKey: ObjectFile.aws.secretAccessKey,
 });
 
-let currentDate = moment().format('YYYY.MM.DD');
-let utitle = '';
-let ucontent = '';
-let udate = '';
-
-interface Props {
-  navigation: NavigationState;
-  route: any;
-}
-
-const feedCreate = ({route, navigation}: Props, props: {info: any}) => {
+const FeedCreate = ({route, navigation}) => {
   const routeItem = route.params;
-  //console.log('넘어온 routeItem', routeItem)
 
   useEffect(() => {});
 
-  const [title, setTitle] = useState(null);
-  const [content, setContent] = useState(null);
+  const [title, setTitle] = useState('');
+  const [contents, setContents] = useState('');
+  const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [diaryDate, setDiaryDate] = useState(false);
-
-  //사용자 정보 가져오기
-  const [userId, setUserId] = useState(null);
-  useEffect(() => {
-    setUserId(JSON.stringify(require('../../../../App').BucketID).slice(6, 27));
-  }, [userId]);
+  const [isLoading, setLoading] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -65,110 +34,119 @@ const feedCreate = ({route, navigation}: Props, props: {info: any}) => {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date: React.SetStateAction<boolean>) => {
-    console.log('선택된 날짜', date);
-    setDiaryDate(date);
-    udate = JSON.stringify(date).slice(1,20);
-    utitle = JSON.stringify(title);
-    ucontent = JSON.stringify(content);
+  const handleConfirm = (selectedDate: Date) => {
+    setDate(selectedDate);
     hideDatePicker();
   };
 
   return (
     <View style={styles.main}>
+      <Loader isLoading={isLoading} />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="datetime"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
       <View style={styles.mainIn}>
         <ScrollView>
           <View style={{flexDirection: 'row'}}>
-            {/* 등록된 이미지 */}
+            {/* TODO 등록된 이미지 */}
             <Image
               source={require('../../../../Assets/Image/test_00.png')}
               style={{width: 50, height: 50, margin: 8}}
             />
+          </View>
+
+          <View style={{paddingLeft: 7}}>
+            <Button
+              titleStyle={{fontFamily: 'BMHANNAPro', color: '#000'}}
+              buttonStyle={{borderColor: '#222', backgroundColor: '#eee'}}
+              icon={{type: 'font-awesome', name: 'calendar-o'}}
+              type="outline"
+              title={`${date.getFullYear()}년 ${date.getMonth()}월 ${date.getDay()}일 ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초`}
+              onPress={showDatePicker}
+            />
 
             <Input
               style={styles.title}
-              placeholder="title"
-              leftIcon={{type: 'font-awesome', name: 'calendar-o'}}
+              label="Title"
+              placeholder="제목을 입력해주세요."
+              leftIcon={{type: 'font-awesome', name: 'bookmark'}}
               onChangeText={(value) => setTitle(value)}
             />
-          </View>
 
-          <Input
-            multiline
-            style={styles.content}
-            placeholder="content"
-            leftIcon={{type: 'font-awesome', name: 'align-justify'}}
-            onChangeText={(value) => setContent(value)}
-          />
-
-          {/* 일자 선택 */}
-          <View style={{paddingLeft: 7}}>
-            <Button
-              type="clear"
-              title="작성일자 선택"
-              onPress={showDatePicker}
-            />
-            {diaryDate && (
-              <Text style={{marginTop: 10, width: '100%', textAlign: 'center'}}>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                  }}>
-                  {JSON.stringify(diaryDate).slice(1, 11)} /{' '}
-                  {JSON.stringify(diaryDate).slice(12, 14)}
-                  {JSON.stringify(diaryDate).slice(14, 17)}
-                </Text>
-                의 일기로{' '}
-                <Text
-                  style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
-                  기록
-                </Text>
-                합니다.
-              </Text>
-            )}
-
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible}
-              mode="datetime"
-              onConfirm={handleConfirm}
-              onCancel={hideDatePicker}
+            <Input
+              style={{fontFamily: 'BMHANNAPro'}}
+              multiline
+              label="Contents"
+              placeholder="내용을 입력해주세요."
+              leftIcon={{type: 'font-awesome', name: 'align-justify'}}
+              onChangeText={(value) => setContents(value)}
             />
           </View>
         </ScrollView>
 
-        {diaryDate && (
-          <View
-            style={{
-              flexDirection: 'row-reverse',
-              position: 'absolute',
-              right: 0,
-              bottom: 0,
-            }}>
-            <Icon
-              raised
-              name="check"
-              type="font-awesome"
-              color="black"
-              onPress={() => {
-                alert('완료');
-                console.log('피드 등록');
-                //여기 피드 등록하는 함수를 넣습니다.
-                //FolderCreate(require('../../../../App').BucketID); // 이미지 업로드 하면 알아서 파일 생성
-                PicUpload(require('../../../../App').BucketID, routeItem);
-                setTimeout(function () {
-                  contentDynamoDBUpload(
-                    require('../../../../App').BucketID,
-                    routeItem,
-                  );
-                }, 2000); // 사진 여러개면 업로드 동안 시간 걸려서 타이머
-                navigation.navigate('Feed');
-              }}
-              size={23}
-            />
-          </View>
-        )}
+        <View
+          style={{
+            flexDirection: 'row-reverse',
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+          }}>
+          <Icon
+            raised
+            name="check"
+            type="font-awesome"
+            color="black"
+            onPress={() => {
+              setLoading(true);
+              const parsedDate = `${JSON.stringify(date).slice(
+                1,
+                11,
+              )}/${JSON.stringify(date).slice(12, 20)}`;
+              PicUpload(
+                require('../../../../App').BucketID,
+                routeItem,
+                parsedDate,
+              ).then(() => {
+                contentDynamoDBUpload(
+                  require('../../../../App').BucketID,
+                  routeItem,
+                  {
+                    date: parsedDate,
+                    title,
+                    contents,
+                  },
+                )
+                  .then(() => {
+                    setLoading(false);
+                    Alert.alert('Done!', '피드가 만들어졌습니다!', [
+                      {
+                        text: 'OK',
+                        onPress: () => {
+                          navigation.navigate('Feed');
+                        },
+                      },
+                    ]);
+                  })
+                  .catch(() => {
+                    setLoading(false);
+                    Alert.alert(
+                      'Error',
+                      '업로드 중 오류가 생겼습니다. \n다시 시도해주세요.',
+                      [
+                        {
+                          text: 'OK',
+                        },
+                      ],
+                    );
+                  });
+              });
+            }}
+            size={23}
+          />
+        </View>
       </View>
     </View>
   );
@@ -196,77 +174,49 @@ const styles = StyleSheet.create({
   },
 });
 
-// 날짜로 폴더 생성 (YYYY-MM-DD/HH:MM:SS.SSS)
-// function FolderCreate(BucketName: string | number | boolean) {
-//   const s3 = new AWS.S3();
-
-//   var uploadParams = {
-//     Bucket : BucketName,
-//     Key : udate.slice(1,11) + '/' + udate.slice(12,24)
-//   };
-
-//   s3.putObject(uploadParams, function(err: any, data: any){
-//     if(err){
-//       console.log("FILE Create Err", err);
-//     }else {
-//       console.log("FILE Create Success", data);
-//     }
-//   });
-// }
-
 // 사진첩에서 체크한 사진 업로드
-async function PicUpload(BucketName: string | number | boolean, datas: any) {
-  const s3 = new AWS.S3();
+async function PicUpload(Bucket: string, photoData: any, date: string) {
+  const promises = [];
 
-  for (var i = 0; i < datas._parts.length; i += 2) {
-    const base64 = await fs.readFile(datas._parts[i + 1][1], 'base64');
+  for (let i = 0; i < photoData._parts.length; i += 2) {
+    const base64 = await fs.readFile(photoData._parts[i + 1][1], 'base64');
     const arrayBuffer = decode(base64);
 
-    var upload = new AWS.S3.ManagedUpload({
+    const upload = new AWS.S3.ManagedUpload({
       params: {
-        Bucket:
-          BucketName + '/' + udate.slice(1, 11) + '/' + udate.slice(12, 24),
-        Key: datas._parts[i][1],
+        Bucket,
+        Key: `${date}/${photoData._parts[i][1]}`,
         Body: arrayBuffer,
         ContentType: 'image/jpeg',
         ACL: 'public-read',
       },
     });
 
-    var promise = upload.promise();
-
-    promise.then(
-      function (data: any) {
-        console.log('Upload Success', data);
-      },
-      function (err: any) {
-        console.log('Upload Err', err);
-      },
-    );
+    promises.push(upload.promise());
   }
+
+  await Promise.all(promises);
 }
 
 // DynamoDB에 title, content 저장
-function contentDynamoDBUpload(BucketName: any, datas: any) {
-  const userid = JSON.stringify(require('../../../../App').BucketID).slice(
-    6,
-    27,
-  );
+function contentDynamoDBUpload(
+  Bucket: any,
+  photoData: any,
+  item: {date: string; title: string; contents: string},
+) {
+  const photos: Array<{Bucket: string; Key: string}> = [];
 
-  const array = new Array();
-
-  for (var i = 0; i < datas._parts.length; i += 2) {
+  for (let i = 0; i < photoData._parts.length; i += 2) {
     // photos 채워넣기
-    const param = {};
-    param.Bucket = BucketName;
-    param.Key =
-      udate.slice(1, 11) + '/' + udate.slice(12, 24) + '/' + datas._parts[i][1];
-    array.push(param);
+    photos.push({
+      Bucket,
+      Key: `${item.date}/${photoData._parts[i][1]}`,
+    });
   }
 
-  var fetchCall = function () {
+  const fetchCall = function () {
     return fetch(
-      `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${userid}/feeds`,
+      `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${ObjectFile.user.id}/feeds`,
       {
         method: 'POST',
         headers: {
@@ -274,22 +224,27 @@ function contentDynamoDBUpload(BucketName: any, datas: any) {
           'content-type': 'application/json',
         },
         body: JSON.stringify({
-          date: udate,
-          title: utitle,
-          contents: ucontent,
-          photos: array,
+          ...item,
+          photos,
         }),
       },
     );
   };
 
-  fetchCall()
-    .then((res) => {
-      console.log('Create Feed Success');
-    })
-    .catch((err) => {
-      console.log('Create Feed Err');
-    });
+  return new Promise((resolve, reject) => {
+    fetchCall()
+      .then((response) => {
+        if (response.status !== 200) {
+          console.error('피드 업로드 중 에러 발생', response);
+          reject();
+        }
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject();
+      });
+  });
 }
 
-export default feedCreate;
+export default FeedCreate;
