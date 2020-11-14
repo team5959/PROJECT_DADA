@@ -33,21 +33,55 @@ const HomeScreen = ({ navigation }: Props) => {
   useEffect(() => {
     console.log("피드리스트 페이지")
     viewAlbum(require('../../../App').BucketID);
-  })
-  
-  const getFeedList = ( date: Date ) => {
-    const feeddate = date.getFullYear() + "-" + ('0' + (date.getMonth() + 1)).slice(-2) + "-" + ('0' + date.getDate()).slice(-2);
-    // console.log("feeddate : " + feeddate);
-    fetch('https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/' + ObjectFile.user.id+'/feeds/of/' + feeddate)
-    .then((response) => response.json())
-    .then((json) => {
-      setFeeds(json)
-      return json;
-    })
-    .catch((error) => {
-      console.error(error);
-  });
-  }  
+    
+    //setSelectedDate(selectedDate);
+    getFeedList(selectedDate);
+    const markedDate={mark}
+
+    startCal();
+  },[]);
+
+  const getFeedList = (date: Date) => {
+    const feeddate =
+      date.getFullYear() +
+      '-' +
+      ('0' + (date.getMonth() + 1)).slice(-2) +
+      '-' +
+      ('0' + date.getDate()).slice(-2);
+    console.log('feeddate : ' + feeddate);
+
+    fetch(
+      'https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/' +
+        ObjectFile.user.id +
+        '/feeds/of/' +
+        feeddate,
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        console.log('response :' + JSON.stringify(json));
+        setFeeds(json);
+        return json;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  function startCal() {
+    return <CalendarStrip
+            // showWeekNumber
+            selectedDate={selectedDate}
+            onPressDate={(date: React.SetStateAction<Date>) => {
+              console.log('date:', date);
+              setSelectedDate(date);
+              const tmp = getFeedList(date);
+              console.log('tmp :' + tmp);
+              console.log('선택된 날짜:', selectedDate);
+            }}
+            markedDate={mark}
+            weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
+          />;
+  };
 
   return (
     <View style={styles.main}>
@@ -138,8 +172,10 @@ const HomeScreen = ({ navigation }: Props) => {
           }} />
       </View>
     </View>
-  )
-}
+  );
+};
+
+
 
 // Show the photos that exist in an album.
 function viewAlbum(BucketName: string | number | boolean) {
