@@ -15,9 +15,6 @@ import fs from 'react-native-fs';
 import {decode} from 'base64-arraybuffer';
 import ObjectFile from '~/Components/ObjectFile';
 
-var width =
-  Dimensions.get('window').width - Dimensions.get('window').width * 0.868;
-
 const images = [
   {
     image:
@@ -60,13 +57,6 @@ const feedCreate = ({route, navigation}: Props, props: {info: any}) => {
     setUserId(JSON.stringify(require('../../../../App').BucketID).slice(6, 27));
   }, [userId]);
 
-  currentDate =
-    JSON.stringify(diaryDate).slice(1, 5) +
-    '.' +
-    JSON.stringify(diaryDate).slice(6, 8) +
-    '.' +
-    JSON.stringify(diaryDate).slice(9, 11);
-
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -78,7 +68,7 @@ const feedCreate = ({route, navigation}: Props, props: {info: any}) => {
   const handleConfirm = (date: React.SetStateAction<boolean>) => {
     console.log('선택된 날짜', date);
     setDiaryDate(date);
-    udate = JSON.stringify(date);
+    udate = JSON.stringify(date).slice(1,20);
     utitle = JSON.stringify(title);
     ucontent = JSON.stringify(content);
     hideDatePicker();
@@ -105,6 +95,7 @@ const feedCreate = ({route, navigation}: Props, props: {info: any}) => {
 
           <Input
             multiline
+            style={styles.content}
             placeholder="content"
             leftIcon={{type: 'font-awesome', name: 'align-justify'}}
             onChangeText={(value) => setContent(value)}
@@ -184,6 +175,9 @@ const feedCreate = ({route, navigation}: Props, props: {info: any}) => {
 };
 
 const styles = StyleSheet.create({
+  content: {
+    fontFamily: 'BMHANNAPro',
+  },
   main: {
     flex: 1,
     backgroundColor: 'ivory',
