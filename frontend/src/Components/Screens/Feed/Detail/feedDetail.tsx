@@ -28,7 +28,7 @@ const FeedDetail = ({route, navigation}) => {
           json.photos.map((photo) => {
             return {
               image: `https://${photo.S3Object.Bucket}.s3.amazonaws.com/${photo.S3Object.Key}`,
-              desc: 'hi',
+              desc: 'First Image',
             };
           }),
         );
@@ -36,10 +36,10 @@ const FeedDetail = ({route, navigation}) => {
       .catch((error) => {
         console.error(error);
       });
-  }, []); // 무한루프 방지용 2번째 변수 []
+  }, []);
 
   return (
-    <View style={styles.main}>
+    <View style={styles.main} key={title}>
       <View style={styles.mainIn}>
         {/* 등록된 이미지 */}
         <View style={{flex: 0.6}}>
@@ -66,9 +66,7 @@ const FeedDetail = ({route, navigation}) => {
         {/* 내용 */}
         <View style={{backgroundColor: 'white', margin: 5, flex: 1}}>
           <Text style={styles.title}>{title}</Text>
-
           <Text style={styles.tag}>{tags.map((tag) => `#${tag} `)}</Text>
-
           <Text style={styles.content}>{contents}</Text>
         </View>
       </View>
@@ -101,11 +99,9 @@ const FeedDetail = ({route, navigation}) => {
           type="font-awesome"
           color="#F78C75"
           onPress={() => {
-            console.log('피드 지운다.');
-            // 여기에 피드 삭제 메서드가 들어갑니다.
             setTimeout(function () {
               deleteDynamoDBContent(ObjectFile.user.id, date);
-            }, 2000); // 사진 여러개면 업로드 동안 시간 걸려서 타이머
+            }, 1500);
           }}
           size={23}
         />
