@@ -5,6 +5,8 @@ import { NavigationState } from '@react-navigation/native'
 import { FlatListSlider } from 'react-native-flatlist-slider';
 import ObjectFile from '~/Components/ObjectFile';
 
+var width = Dimensions.get('window').width; //full width
+
 const AWS = require('aws-sdk')
 AWS.config.update({
   region: ObjectFile.aws.region,
@@ -15,8 +17,6 @@ AWS.config.update({
 interface Props {
   navigation: NavigationState
 }
-
-var width = Dimensions.get('window').width; //full width
 
 const images = [
   {
@@ -30,13 +30,20 @@ const images = [
   },
 ]
 
-const feedDetail = ({ route, navigation }) => {
-  
+let dseletedDate = ''
+
+const feedDetail = ({ route, navigation }) => {  
   const { selectedDate, date } = route.params; // 무슨형식 쓸지 모르니 우선 둘다
+  
   const [title, setTitle] = useState([]);
   const [comment, setComment] = useState([]);
   const [tags, setTags ] = useState([]);
   const [photos, setPhotos] = useState([]);
+  dseletedDate = JSON.stringify(date).slice(1, 20);
+
+  //DynamoDB 삭제를 위한 변수 설정
+  const duserid = JSON.stringify(require('../../../../App').BucketID).slice(6, 27)
+  const ddate = dseletedDate
 
   useEffect(() => {
     console.log('피드 디테일 페이지 시작' + date)
@@ -58,6 +65,13 @@ const feedDetail = ({ route, navigation }) => {
   
        //console.log("fffff" + this.title)
   }, []) // 무한루프 방지용 2번째 변수 []
+
+
+  //사용자 정보 가져오기
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    setUserId(JSON.stringify(require('../../../../App').BucketID).slice(6, 27))
+  }, [userId])
 
   console.log("ss: " + selectedDate );
 
@@ -127,8 +141,10 @@ const feedDetail = ({ route, navigation }) => {
           color='#F78C75'
           onPress={() => {
             console.log('피드 지운다.')
-            // 여기에 피드 삭제 메서드가 들어갑니다. 
-
+            // 여기에 피드 삭제 메서드가 들어갑니다.
+            setTimeout(function () {
+              deleteDynamoDBContent(duserid, ddate)
+            }, 2000) // 사진 여러개면 업로드 동안 시간 걸려서 타이머 
             alert('피드가 삭제되었습니다.')
           }}
           size={23}
@@ -192,13 +208,28 @@ function viewAlbum(BucketName: string | number | boolean, PrefixName: string | n
         
         //console.log("ss!!!!!" + photos);
         console.log("사진:" + photoUrl);
-        
-      });      
-
-      
+      });
     }
-    //console.log(photos);
   });
+}
+
+// // DynamoDB 삭제
+function deleteDynamoDBContent(duserid: any, ddate: any) {  
+  var fetchCall = function () {
+    return fetch(`https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${duserid}/feeds/${ddate}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'content-type': 'application/json'
+      },
+    })
+  }
+  fetchCall().then((res) => {
+    console.log("Delete Feed Success")
+    console.log(res)
+  }).catch((err) => {
+    console.log("Delete Feed Err")
+  })
 }
 
 const styles = StyleSheet.create({

@@ -218,7 +218,6 @@ async function PicUpload(BucketName: string | number | boolean, datas : any){
 
 // DynamoDB에 title, content 저장
 function contentDynamoDBUpload(BucketName : any, datas: any){
-
   const userid = JSON.stringify(require('../../../../App').BucketID).slice(6, 27)
 
   const array = new Array()
