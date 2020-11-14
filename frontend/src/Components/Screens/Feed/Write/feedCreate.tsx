@@ -1,14 +1,12 @@
-import React, { useState, } from 'react'
-import { View, Text, StyleSheet, Dimensions, ScrollView, Image } from 'react-native'
+import React, {useState, useEffect} from 'react'
+import { View, Text, StyleSheet, Dimensions, ScrollView, Image, AsyncStorage } from 'react-native'
 import { NavigationState } from '@react-navigation/native';
 import { Icon, Input, Button } from 'react-native-elements'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment'; 
 import fs from 'react-native-fs'
 import { decode } from 'base64-arraybuffer';
-import { FlatListSlider } from 'react-native-flatlist-slider';
-
-// import { Image } from 'react-native-svg';
+import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
 
 var width = Dimensions.get('window').width - Dimensions.get('window').width * 0.868;
 
@@ -17,27 +15,38 @@ const images = [
     image: 'https://images.unsplash.com/photo-1567226475328-9d6baaf565cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
     desc: 'Silent Waters in the mountains in midst of Himilayas',
   },
-
 ]
 
 let currentDate = moment().format("YYYY.MM.DD");
+let datee = ""
 
 interface Props {
   navigation: NavigationState,
   route: any
 }
 
-const editFeed = ({ route, navigation }: Props) => {
+const feedCreate = ({ route, navigation }: Props, props: { info: any }) => {
   const routeItem  = route.params;
-  //console.log('넘어온 routeItem', routeItem)
+  console.log('넘어온 routeItem', routeItem)
+  
+  useEffect(() => {
+  })
 
   const [title, setTitle] = useState(null);
   const [content, setContent] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [diaryDate, setDiaryDate] = useState(false);
 
+  //사용자 정보 가져오기
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    setUserId(JSON.stringify(require('../../../../App').BucketID).slice(6, 27))
+  }, [userId])
 
-  currentDate = JSON.stringify(diaryDate).slice(1, 5)+"."+JSON.stringify(diaryDate).slice(6, 8)+"."+JSON.stringify(diaryDate).slice(9, 11)
+  currentDate = JSON.stringify(diaryDate).slice(1, 5) + "."
+   + JSON.stringify(diaryDate).slice(6, 8) + "." 
+   + JSON.stringify(diaryDate).slice(9, 11)
+  
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -48,6 +57,9 @@ const editFeed = ({ route, navigation }: Props) => {
 
   const handleConfirm = (date: React.SetStateAction<boolean>) => {
     console.log('선택된 날짜',date)
+    console.log('fetch 날짜', JSON.stringify(date).slice(1, 20))
+    datee = JSON.stringify(date)
+    console.log('이거라도 되라', datee)
     setDiaryDate(date)
     hideDatePicker();
   };
@@ -100,8 +112,6 @@ const editFeed = ({ route, navigation }: Props) => {
               onCancel={hideDatePicker}
             />
           </View>
-
-          
         </ScrollView>
 
         {diaryDate &&
@@ -116,10 +126,11 @@ const editFeed = ({ route, navigation }: Props) => {
                 console.log('피드 등록')
                 //여기 피드 등록하는 함수를 넣습니다.
                 FolderCreate(require('../../../../App').BucketID);
-                PicUpload(require('../../../../App').BucketID, routeItem);
-                navigation.navigate('Feed')
+                PicUpload(require('../../../../App').BucketID, routeItem)
+                contentDynamoDBUpload(require('../../../../App').BucketID, routeItem, title, content, datee)
                 console.log('title', title)
                 console.log('content', content)
+                navigation.navigate('Feed')
               }}
               size={23}
             />
@@ -196,4 +207,53 @@ async function PicUpload(BucketName: string | number | boolean, datas : any){
   }
 }
 
-export default editFeed
+// DynamoDB에 title, content 저장
+async function contentDynamoDBUpload(BucketName: any, datas: any, title: any, content: any, datee : any){
+
+  const param = {};
+  console.log('첫번째 파람스', param)
+  
+  param['method'] = 'POST'
+  param['header'] = {'content-type':'application/json'}
+
+  console.log('두번째 파람스', param)
+  
+  const body = {};
+  body['title'] = title
+  body['content'] = content
+  body['date'] = datee
+  console.log('세번째 파람스', body)
+
+  param['body'] = body
+  console.log('네번째 파람스', param)
+
+  const photos = new Array()
+  for(var i = 0; i < datas._parts.length; i+=2) {
+    const photo = {};
+    // console.log('버킷이름', BucketName) // 정상 확인
+    photo['Bucket'] = BucketName
+    photo['Key'] = BucketName + "/" + currentDate + "/" + datas._parts[i][1]
+
+    photos.push(photo)
+  }
+  
+  // console.log('photos', photos)
+
+  body['photos'] = photos
+  
+
+  let userid = JSON.stringify(require('../../../../App').BucketID).slice(6, 27)
+
+  return fetch(`https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${userid}/feeds`, JSON.parse(JSON.stringify(param)))
+    .then((response) => {
+      console.log('제발 와져라', response)
+    })
+    // .then((json) => {
+    //   console.log('json', json)
+    //   return json;
+    // })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+export default feedCreate
