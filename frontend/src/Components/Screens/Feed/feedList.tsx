@@ -14,7 +14,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import CalendarStrip from 'react-native-slideable-calendar-strip';
 import {Icon} from 'react-native-elements';
 import ObjectFile from '~/Components/ObjectFile';
-import Loader from '~/Components/Util/Loader';
 
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -37,7 +36,6 @@ const mark = [];
 
 const HomeScreen = ({navigation}: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isLoading, setLoading] = useState(false);
 
   console.log('###################홈스크린함수 시작###################');
 
@@ -87,13 +85,11 @@ const HomeScreen = ({navigation}: Props) => {
             // showWeekNumber
             selectedDate={selectedDate}
             onPressDate={(date: React.SetStateAction<Date>) => {
-              setLoading(true);
               console.log('date:', date);
               setSelectedDate(date);
               const tmp = getFeedList(date);
               console.log('tmp :' + tmp);
               console.log('선택된 날짜:', selectedDate);
-              setLoading(false);
             }}
             markedDate={mark}
             weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
@@ -102,20 +98,17 @@ const HomeScreen = ({navigation}: Props) => {
 
   return (
     <View style={styles.main}>
-      <Loader isLoading={isLoading} />
       {/* 상단 달력 */}
       <View style={{backgroundColor: 'white'}}>
         <CalendarStrip
           // showWeekNumber
           selectedDate={selectedDate}
           onPressDate={(date: React.SetStateAction<Date>) => {
-            setLoading(true);
             console.log('date:', date);
             setSelectedDate(date);
             const tmp = getFeedList(date);
             console.log('tmp :' + tmp);
             console.log('선택된 날짜:', selectedDate);
-            setLoading(false);
           }}
           markedDate={mark}
           weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
