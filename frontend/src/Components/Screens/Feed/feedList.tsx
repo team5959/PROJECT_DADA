@@ -21,16 +21,21 @@ console.log('###################################피드 리스트 페이지 시�
 interface Props {
   navigation: NavigationState 
 }
+const mark = [];
+
 const HomeScreen = ({ navigation }: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   console.log('###################홈스크린함수 시작###################')
   
  
   const [feeds, setFeeds] = useState([]);
+
+  
   console.log('selectedDate:', selectedDate)
 
   useEffect(() => {
     viewAlbum(require('../../../App').BucketID);
+    
   })
   
   const getFeedList = ( date: Date ) => {
@@ -49,7 +54,9 @@ const HomeScreen = ({ navigation }: Props) => {
   });
   }  
 
+ 
   
+
   return (
     <View style={styles.main}>
       {/* 상단 달력 */}
@@ -70,7 +77,8 @@ const HomeScreen = ({ navigation }: Props) => {
           // onSwipeDown={() => {
           //   alert('onSwipeDown');
           // }}
-          markedDate={['2020-11-02', '2020-11-09']}
+
+          markedDate={mark}
           weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
         />
       </View>
@@ -162,14 +170,26 @@ function viewAlbum(BucketName: string | number | boolean) {
   
   var albumPhotosKey = encodeURIComponent(BucketName) + '/';
 
-  // 버킷 리스트 확인
-  // s3.listBuckets(function(err: any, data: { Buckets: any; }) {
-  //   if (err) {
-  //     console.log("Error", err);
-  //   } else {
-  //     console.log("Success", data.Buckets);
-  //   }
-  // });
+  var bucketParams = {
+    Bucket : BucketName
+  };
+
+  //디렉토리 이름만 가져오기 도전
+  s3.listObjects(bucketParams, function(err: any, data: any) {
+    if (err) {
+      console.log("Error", err);
+    } else {
+
+      data.Contents.map(function(photo: { Key: any; }) {
+
+        
+        const d = photo.Key.split('/');
+        console.log("디렉토리만 떠주세요!!!!!" + d[0]);
+        // console.log("dd!!!!!" + photoUrl);
+        mark.push(d[0]);
+      });      
+    }
+  });
 
   var bucketParams = {
     Bucket : BucketName
