@@ -43,6 +43,7 @@ const HomeScreen = ({navigation}: Props) => {
   console.log('selectedDate:', selectedDate);
 
   useEffect(() => {
+    console.log("피드리스트 페이지")
     viewAlbum(require('../../../App').BucketID);
   });
 
@@ -86,13 +87,7 @@ const HomeScreen = ({navigation}: Props) => {
             console.log('tmp :' + tmp);
             console.log('선택된 날짜:', selectedDate);
           }}
-          // onPressGoToday={(today) => {
-          //   setSelectedDate('today:',today);
-          // }}
-          // onSwipeDown={() => {
-          //   alert('onSwipeDown');
-          // }}
-
+         
           markedDate={mark}
           weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
         />
@@ -154,7 +149,7 @@ const HomeScreen = ({navigation}: Props) => {
                     {/* {JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 첫 번째 추억{'\n'} */}
 
                     {/* 태그 */}
-                    {feed.tags.map((tag, i) => {
+                    {feed.tags.map((tag: React.ReactNode, i: string | number | null | undefined) => {
                       return (
                         <Text style={styles.tag} key={i}>
                           #{tag}{' '}
@@ -217,42 +212,6 @@ function viewAlbum(BucketName: string | number | boolean) {
         // console.log("디렉토리만 떠주세요!!!!!" + d[0]);
         // console.log("dd!!!!!" + photoUrl);
         mark.push(d[0]);
-      });
-    }
-  });
-
-  var bucketParams = {
-    Bucket: BucketName,
-  };
-
-  //읽기 권한 부여
-  s3.getBucketAcl(bucketParams, function (err: any, data: {Grants: any}) {
-    if (err) {
-      console.log('Error', err);
-    } else if (data) {
-      console.log('Success', data.Grants);
-    }
-  });
-
-  s3.listObjects(bucketParams, function (err: any, data: any) {
-    if (err) {
-      // console.log("Error", err);
-    } else {
-      // console.log("버킷 데이터 : ", data);
-
-      console.log(s3.endpoint);
-      console.log(s3.endpoint.href);
-      var href = s3.endpoint.href;
-
-      var bucketUrl = href + BucketName + '/';
-
-      var photos = data.Contents.map(function (photo: {Key: any}) {
-        var photoKey = photo.Key;
-
-        var photoUrl = bucketUrl + encodeURIComponent(photoKey);
-
-        // console.log("ss!!!!!" + photos);
-        // console.log("dd!!!!!" + photoUrl);
       });
     }
   });
