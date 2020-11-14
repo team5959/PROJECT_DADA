@@ -94,15 +94,15 @@ const feedCreate = ({ route, navigation }: Props, props: { info: any }) => {
           />
 
           {/* 일자 선택 */}
-          <View style={{ flexDirection: 'row', paddingLeft: 7 }}>
+          <View style={{ paddingLeft: 7 }}>
             <Button
               type='clear'
               title="작성일자 선택"
               onPress={showDatePicker}
             />
             {diaryDate && (
-              <Text style={{ marginTop: 10, paddingRight: 58, width: '100%', textAlign: 'center' }}>
-                <Text style={{ color: 'black', fontSize: 16, }}>{JSON.stringify(diaryDate).slice(1, 11)} / {JSON.stringify(diaryDate).slice(12, 14)}{JSON.stringify(diaryDate).slice(14, 17)}</Text>의 일기로 <Text style={{ color: 'black', fontSize: 16 }}>기록</Text>합니다.</Text>)
+              <Text style={{ marginTop: 10, width: '100%', textAlign: 'center' }}>
+                <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>{JSON.stringify(diaryDate).slice(1, 11)} / {JSON.stringify(diaryDate).slice(12, 14)}{JSON.stringify(diaryDate).slice(14, 17)}</Text>의 일기로 <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>기록</Text>합니다.</Text>)
             }
 
             <DateTimePickerModal
@@ -143,17 +143,19 @@ const feedCreate = ({ route, navigation }: Props, props: { info: any }) => {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    backgroundColor: 'ivory'
+    backgroundColor: 'ivory',
+    fontFamily: "BMHANNAPro",
   },
   mainIn: {
     margin: 7,
     marginTop: 10,
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    fontFamily: "BMHANNAPro",
   },
   title: {
     marginTop: 10,
-    fontFamily: ''
+    fontFamily: "BMHANNAPro",
   },
 })
 
