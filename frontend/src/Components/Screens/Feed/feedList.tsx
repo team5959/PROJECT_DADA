@@ -14,6 +14,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import CalendarStrip from 'react-native-slideable-calendar-strip';
 import {Icon} from 'react-native-elements';
 import ObjectFile from '~/Components/ObjectFile';
+import Loader from '~/Components/Util/Loader';
 
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -36,6 +37,8 @@ const mark = [];
 
 const HomeScreen = ({navigation}: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isLoading, setLoading] = useState(false);
+
   console.log('###################홈스크린함수 시작###################');
 
   const [feeds, setFeeds] = useState([]);
@@ -45,7 +48,13 @@ const HomeScreen = ({navigation}: Props) => {
   useEffect(() => {
     console.log("피드리스트 페이지")
     viewAlbum(require('../../../App').BucketID);
-  });
+    
+    //setSelectedDate(selectedDate);
+    getFeedList(selectedDate);
+    const markedDate={mark}
+
+    startCal();
+  },[]);
 
   const getFeedList = (date: Date) => {
     const feeddate =
@@ -73,21 +82,41 @@ const HomeScreen = ({navigation}: Props) => {
       });
   };
 
+  function startCal() {
+    return <CalendarStrip
+            // showWeekNumber
+            selectedDate={selectedDate}
+            onPressDate={(date: React.SetStateAction<Date>) => {
+              setLoading(true);
+              console.log('date:', date);
+              setSelectedDate(date);
+              const tmp = getFeedList(date);
+              console.log('tmp :' + tmp);
+              console.log('선택된 날짜:', selectedDate);
+              setLoading(false);
+            }}
+            markedDate={mark}
+            weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
+          />
+  }
+
   return (
     <View style={styles.main}>
+      <Loader isLoading={isLoading} />
       {/* 상단 달력 */}
       <View style={{backgroundColor: 'white'}}>
         <CalendarStrip
           // showWeekNumber
           selectedDate={selectedDate}
           onPressDate={(date: React.SetStateAction<Date>) => {
+            setLoading(true);
             console.log('date:', date);
             setSelectedDate(date);
             const tmp = getFeedList(date);
             console.log('tmp :' + tmp);
             console.log('선택된 날짜:', selectedDate);
+            setLoading(false);
           }}
-         
           markedDate={mark}
           weekStartsOn={1} // 0,1,2,3,4,5,6 for S M T W T F S, defaults to 0
         />
@@ -188,9 +217,7 @@ const HomeScreen = ({navigation}: Props) => {
   );
 };
 
-function getHtml(template: any[]) {
-  return template.join('\n');
-}
+
 
 // Show the photos that exist in an album.
 function viewAlbum(BucketName: string | number | boolean) {
