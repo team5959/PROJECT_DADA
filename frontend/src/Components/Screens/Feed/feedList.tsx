@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }: Props) => {
           <TouchableOpacity
             onPress={() => {
               Alert.alert('DADA에서 알려드립니다.', '가피드 생성됩니다.')
-            }}>
+            }}>   
             <ImageBackground
               source={require('../../../Assets/Image/test_01.png')}
               style={{
