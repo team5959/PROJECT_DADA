@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation }: Props) => {
               alert('가피드 생성')
             }}>
             <ImageBackground
-              source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+              source={ require('../../../Assets/Image/test_01.png') }
               style={{
                 width: '100%',
                 height: 160,
@@ -107,9 +107,9 @@ const HomeScreen = ({ navigation }: Props) => {
         </View>)
         :
         (feeds.map((feed, i) => {
-          console.log("으악" + feed.date);
-          console.log(selectedDate);
-          console.log(feed.date);
+          //console.log("으악" + feed.date);
+          //console.log(selectedDate);
+          //console.log("피드정보 : " + feed.S3Object.Key);
           return <ScrollView style={{ flex: 1, margin: 7 }} key={i}>
             <TouchableOpacity
               onPress={() => {
@@ -120,7 +120,7 @@ const HomeScreen = ({ navigation }: Props) => {
               }}
             >
               <ImageBackground
-                source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+                source={{ uri: 'https://s3.amazonaws.com/dada-' + ObjectFile.user.id + '/' + feed.S3Object.Key }}
                 style={{
                   width: '100%',
                   height: 160,
@@ -132,7 +132,14 @@ const HomeScreen = ({ navigation }: Props) => {
                 <Text style={styles.textInCard}>{feed.title}{'\n'}
                   {/* 가피드때는 이걸로 ? */}
                   {/* {JSON.stringify(selectedDate).slice(6, 8)}월 {JSON.stringify(selectedDate).slice(9, 11)}의 첫 번째 추억{'\n'} */}
-                  <Text style={styles.tag}>#야... #이거 개어려움</Text>
+                  
+                  {/* 태그 */}
+                  {feed.tags.map(( tag, i)=>{
+                    return <Text style={styles.tag} key = {i} >#{tag} </Text>
+                  })}
+                  
+                <Text style={styles.tag}>{'\n'}{'\n'}{feed.date}</Text>
+                  
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
@@ -183,7 +190,7 @@ function viewAlbum(BucketName: string | number | boolean) {
 
         
         const d = photo.Key.split('/');
-        console.log("디렉토리만 떠주세요!!!!!" + d[0]);
+        //console.log("디렉토리만 떠주세요!!!!!" + d[0]);
         // console.log("dd!!!!!" + photoUrl);
         mark.push(d[0]);
       });      
