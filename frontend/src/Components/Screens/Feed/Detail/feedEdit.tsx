@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import {StyleSheet, View, ScrollView, Alert} from 'react-native';
 import {Icon, Input} from 'react-native-elements';
 import Loader from '~/Components/Util/Loader';
+import ObjectFile from '~/Components/ObjectFile';
 
 const FeedEdit = ({route, navigation}) => {
   const {
     title: originalTitle,
     tags: originalTags,
     contents: originalContents,
+    date,
   } = route.params;
   const [title, setTitle] = useState(originalTitle);
   const [tags, setTags] = useState('#' + originalTags.join(' #'));
@@ -66,11 +68,14 @@ const FeedEdit = ({route, navigation}) => {
               parsedTags[0] = parsedTags[0].slice(1);
             }
             setLoading(true);
-            uploadToDB({
-              title,
-              contents,
-              tags: parsedTags,
-            })
+            uploadToDB(
+              {
+                title,
+                contents,
+                tags: parsedTags,
+              },
+              date,
+            )
               .then(() => {
                 setLoading(false);
                 Alert.alert('DADA가 알려드립니다.', '수정이 완료되었습니다.', [
@@ -103,15 +108,17 @@ const FeedEdit = ({route, navigation}) => {
 };
 export default FeedEdit;
 
-const uploadToDB = async (feed: {
-  title: string;
-  contents: string;
-  tags: Array<string>;
-}) => {
+const uploadToDB = async (
+  feed: {
+    title: string;
+    contents: string;
+    tags: Array<string>;
+  },
+  date: string,
+) => {
   return new Promise((resolve, reject) => {
     fetch(
-      // `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${ObjectFile.user.id}/feeds/${date}`,
-      `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${12345}/feeds/${'2020-11-12T14:08:11'}`,
+      `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${ObjectFile.user.id}/feeds/${date}`,
       {
         method: 'PUT',
         headers: {
