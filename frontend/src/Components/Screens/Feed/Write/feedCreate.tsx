@@ -6,7 +6,6 @@ import {
   Dimensions,
   ScrollView,
   Image,
-  AsyncStorage,
 } from 'react-native';
 import {NavigationState} from '@react-navigation/native';
 import {Icon, Input, Button} from 'react-native-elements';
@@ -166,11 +165,14 @@ const feedCreate = ({route, navigation}: Props, props: {info: any}) => {
                 console.log('피드 등록');
                 //여기 피드 등록하는 함수를 넣습니다.
                 //FolderCreate(require('../../../../App').BucketID); // 이미지 업로드 하면 알아서 파일 생성
-                PicUpload(require('../../../../App').BucketID, routeItem)
-                setTimeout(function(){
-                  contentDynamoDBUpload(require('../../../../App').BucketID, routeItem)
-                }, 2000) // 사진 여러개면 업로드 동안 시간 걸려서 타이머 
-                navigation.navigate('Feed')
+                PicUpload(require('../../../../App').BucketID, routeItem);
+                setTimeout(function () {
+                  contentDynamoDBUpload(
+                    require('../../../../App').BucketID,
+                    routeItem,
+                  );
+                }, 2000); // 사진 여러개면 업로드 동안 시간 걸려서 타이머
+                navigation.navigate('Feed');
               }}
               size={23}
             />
@@ -228,7 +230,8 @@ async function PicUpload(BucketName: string | number | boolean, datas: any) {
 
     var upload = new AWS.S3.ManagedUpload({
       params: {
-        Bucket: BucketName + "/" + udate.slice(1,11) + "/" + udate.slice(12,24),
+        Bucket:
+          BucketName + '/' + udate.slice(1, 11) + '/' + udate.slice(12, 24),
         Key: datas._parts[i][1],
         Body: arrayBuffer,
         ContentType: 'image/jpeg',
@@ -258,11 +261,13 @@ function contentDynamoDBUpload(BucketName: any, datas: any) {
 
   const array = new Array();
 
-  for(var i = 0; i < datas._parts.length; i += 2){ // photos 채워넣기
-    const param = {}
-    param['Bucket'] = BucketName
-    param['Key'] = udate.slice(1,11) + "/" + udate.slice(12,24) + "/" + datas._parts[i][1]
-    array.push(param)
+  for (var i = 0; i < datas._parts.length; i += 2) {
+    // photos 채워넣기
+    const param = {};
+    param.Bucket = BucketName;
+    param.Key =
+      udate.slice(1, 11) + '/' + udate.slice(12, 24) + '/' + datas._parts[i][1];
+    array.push(param);
   }
 
   var fetchCall = function () {
@@ -281,14 +286,8 @@ function contentDynamoDBUpload(BucketName: any, datas: any) {
           photos: array,
         }),
       },
-      body: JSON.stringify({
-        date: udate.slice(1, 20),
-        title: utitle,
-        contents: ucontent,
-        photos: array,
-      }),
-    })
-  }
+    );
+  };
 
   fetchCall()
     .then((res) => {
