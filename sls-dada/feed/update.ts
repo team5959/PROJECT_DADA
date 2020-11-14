@@ -14,10 +14,9 @@ module.exports.update = (event, context, callback) => {
       date: event.pathParameters.date
     },
     ExpressionAttributeValues: {
-      ':tags': dynamoDb.createSet(data['tags']),
-      ':S3Object': data['S3Object']
+      ':tags': dynamoDb.createSet(data['tags'])
     },
-    UpdateExpression: 'SET tags=:tags, S3Object=:S3Object',
+    UpdateExpression: 'SET tags=:tags',
     ReturnValues: 'ALL_NEW'
   }
 
@@ -37,6 +36,11 @@ module.exports.update = (event, context, callback) => {
   if (data['contents'] !== undefined) {
     params.ExpressionAttributeValues[':contents'] = data['contents']
     params.UpdateExpression = params.UpdateExpression.concat(', contents=:contents')
+  }
+
+  if (data['S3Object'] !== undefined) {
+    params.ExpressionAttributeValues[':S3Object'] = data['S3Object']
+    params.UpdateExpression = params.UpdateExpression.concat(', S3Object=:S3Object')
   }
 
   dynamoDb.update(params, (error, result) => {
