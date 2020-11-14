@@ -31,6 +31,7 @@ const HomeScreen = ({ navigation }: Props) => {
   const [feeds, setFeeds] = useState([]);
 
   useEffect(() => {
+    console.log("피드리스트 페이지")
     viewAlbum(require('../../../App').BucketID);
   })
   
