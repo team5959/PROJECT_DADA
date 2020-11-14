@@ -69,15 +69,10 @@ const HomeScreen = ({ navigation }: Props) => {
           {/* 일기 작성 유도 피드 */}
           <TouchableOpacity
             onPress={() => {
-              Alert.alert('DADA에서 알려드립니다.', 'AI피드를 생성합니다.')
+              Alert.alert('DADA에서 알려드립니다.', '가피드 생성됩니다.')
             }}>
             <ImageBackground
-              source={{
-                uri: 'https://s3.amazonaws.com/dada-' +
-                  ObjectFile.user.id +
-                  '/' +
-                  feed.S3Object.Key,
-              }}
+              source={require('../../../Assets/Image/test_01.png')}
               style={{
                 width: width * 0.97,
                 height: width * 0.35,
@@ -105,7 +100,11 @@ const HomeScreen = ({ navigation }: Props) => {
               }}
             >
               <ImageBackground
-                source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+                source={{
+                  uri: 'https://s3.amazonaws.com/dada-' +
+                    ObjectFile.user.id +
+                    '/' +
+                    feed.S3Object.Key, }}
                 style={{
                   width: width * 0.97,
                   height: width * 0.35,
