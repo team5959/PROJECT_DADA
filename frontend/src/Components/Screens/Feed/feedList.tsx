@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation }: Props) => {
               alert('가피드 생성')
             }}>
             <ImageBackground
-              source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+              source={{ uri: '' }}
               style={{
                 width: '100%',
                 height: 160,
@@ -109,7 +109,7 @@ const HomeScreen = ({ navigation }: Props) => {
         (feeds.map((feed, i) => {
           console.log("으악" + feed.date);
           console.log(selectedDate);
-          console.log(feed.date);
+          console.log("피드정보 : " + feed.S3Object.Key);
           return <ScrollView style={{ flex: 1, margin: 7 }} key={i}>
             <TouchableOpacity
               onPress={() => {
@@ -120,7 +120,7 @@ const HomeScreen = ({ navigation }: Props) => {
               }}
             >
               <ImageBackground
-                source={{ uri: 'https://s3.amazonaws.com/dada-107302456767622872057/2020-11-09%2FIMG_2089.jpg' }}
+                source={{ uri: 'https://s3.amazonaws.com/dada-' + ObjectFile.user.id + '/' + feed.S3Object.Key }}
                 style={{
                   width: '100%',
                   height: 160,
