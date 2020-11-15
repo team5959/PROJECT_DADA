@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   googleButton: {
     width: dWidth * 0.8,
-    height: dWidth * 0.1,
+    height: dWidth * 0.12,
   },
 });
 export default App;
