@@ -19,19 +19,17 @@ const FeedDetail = ({route, navigation}) => {
       `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${ObjectFile.user.id}/feeds/${date}`,
     )
       .then((response) => response.json())
-      .then((json) => {
+      .then((json) => {                
+        json.photos.forEach((photo: { S3Object: { Key: string; }; }) => {
+          images.push({
+            image: `https://${photo.S3Object.Bucket}.s3.amazonaws.com/${photo.S3Object.Key}`,
+          });
+        });
+
         setTitle(json.title);
         setContents(json.contents);
         setTags(json.tags);
         setPhotos(json.photos);
-        setImages(
-          json.photos.map((photo) => {
-            return {
-              image: `https://${photo.S3Object.Bucket}.s3.amazonaws.com/${photo.S3Object.Key}`,
-              desc: 'First Image',
-            };
-          }),
-        );
       })
       .catch((error) => {
         console.error(error);
@@ -59,7 +57,7 @@ const FeedDetail = ({route, navigation}) => {
             indicatorActiveWidth={15}
             animation={false}
             autoscroll={false}
-            loop={true}
+            loop={false}
           />
         </View>
 
