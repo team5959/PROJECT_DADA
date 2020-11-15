@@ -63,7 +63,7 @@ const FeedCreate = ({route, navigation}) => {
               buttonStyle={{borderColor: '#222', backgroundColor: '#eee'}}
               icon={{type: 'font-awesome', name: 'calendar-o'}}
               type="outline"
-              title={`${date.getFullYear()}년 ${date.getMonth()}월 ${date.getDay()}일 ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초`}
+              title={`${date.getFullYear()}년 ${date.getMonth()}월 ${date.getDate()}일 ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초`}
               onPress={showDatePicker}
             />
 
@@ -103,7 +103,7 @@ const FeedCreate = ({route, navigation}) => {
               const parsedDate = `${JSON.stringify(date).slice(
                 1,
                 11,
-              )}/${JSON.stringify(date).slice(12, 20)}`;
+              )}T${JSON.stringify(date).slice(12, 20)}`;
               PicUpload(
                 require('../../../../App').BucketID,
                 routeItem,
@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
 // 사진첩에서 체크한 사진 업로드
 async function PicUpload(Bucket: string, photoData: any, date: string) {
   const promises = [];
+  const slashDate = date.replace('T', '/');
 
   for (let i = 0; i < photoData._parts.length; i += 2) {
     const base64 = await fs.readFile(photoData._parts[i + 1][1], 'base64');
@@ -184,7 +185,7 @@ async function PicUpload(Bucket: string, photoData: any, date: string) {
     const upload = new AWS.S3.ManagedUpload({
       params: {
         Bucket,
-        Key: `${date}/${photoData._parts[i][1]}`,
+        Key: `${slashDate}/${photoData._parts[i][1]}`,
         Body: arrayBuffer,
         ContentType: 'image/jpeg',
         ACL: 'public-read',
@@ -204,12 +205,13 @@ function contentDynamoDBUpload(
   item: {date: string; title: string; contents: string},
 ) {
   const photos: Array<{Bucket: string; Key: string}> = [];
+  const slashDate = item.date.replace('T', '/');
 
   for (let i = 0; i < photoData._parts.length; i += 2) {
     // photos 채워넣기
     photos.push({
       Bucket,
-      Key: `${item.date}/${photoData._parts[i][1]}`,
+      Key: `${slashDate}/${photoData._parts[i][1]}`,
     });
   }
 
