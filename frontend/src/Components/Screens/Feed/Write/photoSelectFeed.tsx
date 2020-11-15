@@ -20,12 +20,13 @@ const CreateFeed = ({navigation}) => {
           tmp.append('path', images[i].path);
         }
 
-        navigation.navigate('feedCreate', tmp);
+        navigation.navigate('feed_Create', tmp);
       })
       .catch(() => {
         Alert.alert('Error!', '사진을 불러오는데 실패하였습니다.');
         navigation.navigate('Feed');
-      });
+        
+      });    
   });
 
   return (
