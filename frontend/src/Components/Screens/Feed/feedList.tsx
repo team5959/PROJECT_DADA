@@ -107,6 +107,7 @@ const HomeScreen = ({ navigation }: Props) => {
               Alert.alert('DADA에서 알려드립니다.', '가피드 생성됩니다.')
             }}>   
             <ImageBackground
+             imageStyle={{borderRadius:20}}
               source={require('../../../Assets/Image/test_01.png')}
               style={{
                 width: width * 0.97,
@@ -125,34 +126,37 @@ const HomeScreen = ({ navigation }: Props) => {
         :
         (<ScrollView style={{ flex: 1, margin: 7 }} >
           {feeds.map((feed, i) => {
-            return <TouchableOpacity
-              key={i}
-              onPress={() => {
-                navigation.navigate('FeedDetail', {
-                  selectedDate: selectedDate,
-                  date: feed.date
-                })
-              }}
-            >
-              <ImageBackground
-                source={{
-                  uri: 'https://s3.amazonaws.com/dada-' +
-                    ObjectFile.user.id +
-                    '/' +
-                    feed.S3Object.Key, }}
-                style={{
-                  width: width * 0.97,
-                  height: width * 0.35,
-                  backgroundColor: 'skyblue',
-                  borderRadius: 20,
-                  marginBottom: 10,
+            return <ScrollView>              
+              <TouchableOpacity
+                key={i}
+                onPress={() => {
+                  navigation.navigate('FeedDetail', {
+                    selectedDate: selectedDate,
+                    date: feed.date
+                  })
                 }}
               >
-                <Text style={styles.textInCard}>{feed.title}{'\n'}
-                  <Text style={styles.tag}>{feed.tags.map((tag) => ' #' + tag)}</Text>
-                </Text>
-              </ImageBackground>
-            </TouchableOpacity>
+                <ImageBackground
+                  imageStyle={{borderRadius: 20}}
+                  source={{
+                    uri: 'https://s3.amazonaws.com/dada-' +
+                      ObjectFile.user.id +
+                      '/' +
+                      feed.S3Object.Key, }}
+                  style={{
+                    width: width * 0.97,
+                    height: width * 0.35,
+                    backgroundColor: 'skyblue',
+                    borderRadius: 20,
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text style={styles.textInCard}>{feed.title}{'\n'}
+                    <Text style={styles.tag}>{feed.tags.map((tag) => ' #' + tag)}</Text>
+                  </Text>
+                </ImageBackground>
+              </TouchableOpacity>
+            </ScrollView>
           })}
           </ScrollView>
         )
@@ -168,7 +172,7 @@ const HomeScreen = ({ navigation }: Props) => {
           reverseColor='black'
           onPress={() => {
             console.log('사진 선택시작')
-            navigation.navigate('photoSelectFeed')
+            navigation.navigate('photo_Select')
           }} />
       </View>
     </View>
@@ -205,7 +209,7 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
-    backgroundColor: 'ivory',
+    backgroundColor: 'white',
   },
   textInCard: {
     flex: 1,

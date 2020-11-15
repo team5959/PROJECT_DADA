@@ -78,7 +78,7 @@ const main = (props: {info: any}, {navigation}: Props) => {
           }}
         />
         <Stack.Screen
-          name="photoSelectFeed"
+          name="photo_Select"
           component={photoSelectFeed}
           options={{
             // title: 'Diary',
@@ -90,7 +90,7 @@ const main = (props: {info: any}, {navigation}: Props) => {
           }}
         />
         <Stack.Screen
-          name="feedCreate"
+          name="feed_Create"
           component={feedCreate}
           info={userInfo}
           options={{
@@ -100,7 +100,9 @@ const main = (props: {info: any}, {navigation}: Props) => {
             headerTitleStyle: {
               fontFamily: 'BMHANNAPro',
             },
+            
           }}
+          
         />
 
         {/* //피드 디테일 */}

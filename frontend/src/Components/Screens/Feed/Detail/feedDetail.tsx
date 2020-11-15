@@ -13,7 +13,7 @@ const FeedDetail = ({route, navigation}) => {
   const [tags, setTags] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [images, setImages] = useState([]);
-
+  const [location, setLocation] = useState(null);
   useEffect(() => {
     fetch(
       `https://fdonrkhu46.execute-api.us-east-1.amazonaws.com/dev/users/${ObjectFile.user.id}/feeds/${date}`,
@@ -30,6 +30,7 @@ const FeedDetail = ({route, navigation}) => {
         setContents(json.contents);
         setTags(json.tags);
         setPhotos(json.photos);
+        setLocation(json.location);
       })
       .catch((error) => {
         console.error(error);
@@ -64,6 +65,10 @@ const FeedDetail = ({route, navigation}) => {
         {/* 내용 */}
         <View style={{backgroundColor: 'white', margin: 5, flex: 1}}>
           <Text style={styles.title}>{title}</Text>
+          {location && <View style={{flexDirection: 'row'}}>
+            <Icon style={styles.locationIcon} name="map-marker" type="font-awesome"/>
+            <Text style={styles.location}>{location}</Text>
+          </View>}
           <Text style={styles.tag}>{tags.map((tag) => `#${tag} `)}</Text>
           <Text style={styles.content}>{contents}</Text>
         </View>
@@ -135,20 +140,28 @@ function deleteDynamoDBContent(duserid: any, ddate: any) {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: 'ivory',
+    backgroundColor: 'white',
     flex: 1,
   },
   mainIn: {
     flex: 1,
     margin: 7,
     marginTop: 10,
-    backgroundColor: 'ivory',
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
     fontFamily: 'BMHANNAPro',
     fontSize: 20,
+  },
+  location: {
+    lineHeight:1,
+    paddingTop: 17,
+    fontFamily: 'BMHANNAPro',
+    fontSize: 16,
+  },
+  locationIcon: {
+    marginRight: 4
   },
   tag: {
     fontFamily: 'BMHANNAPro',

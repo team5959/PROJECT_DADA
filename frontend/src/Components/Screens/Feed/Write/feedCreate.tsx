@@ -49,23 +49,17 @@ const FeedCreate = ({route, navigation}) => {
       />
       <View style={styles.mainIn}>
         <ScrollView>
-          <View style={{flexDirection: 'row'}}>
-            {/* TODO 등록된 이미지 */}
-            <Image
-              source={require('../../../../Assets/Image/test_00.png')}
-              style={{width: 50, height: 50, margin: 8}}
-            />
-          </View>
-
           <View style={{paddingLeft: 7}}>
-            <Button
-              titleStyle={{fontFamily: 'BMHANNAPro', color: '#000'}}
-              buttonStyle={{borderColor: '#222', backgroundColor: '#eee'}}
-              icon={{type: 'font-awesome', name: 'calendar-o'}}
-              type="outline"
-              title={`${date.getFullYear()}년 ${date.getMonth()}월 ${date.getDate()}일 ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초`}
-              onPress={showDatePicker}
-            />
+            <View style={{marginBottom: 30}}>
+              <Button
+                titleStyle={{fontFamily: 'BMHANNAPro', color: '#000'}}
+                buttonStyle={{borderColor: '#222', backgroundColor: '#eee'}}
+                icon={{type: 'font-awesome', name: 'calendar-o'}}
+                type="outline"
+                title={`${date.getFullYear()}년 ${date.getMonth()}월 ${date.getDate()}일 ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초`}
+                onPress={showDatePicker}
+              />
+            </View>
 
             <Input
               style={styles.title}
@@ -157,7 +151,7 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
-    backgroundColor: 'ivory',
+    backgroundColor: 'white',
     fontFamily: 'BMHANNAPro',
   },
   mainIn: {
