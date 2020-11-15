@@ -30,6 +30,7 @@ provider:
       Resource: "*"
   apiGateway:
     shouldStartNameWithService: true
+  timeout: 20
 
 functions:
   listFeed:
