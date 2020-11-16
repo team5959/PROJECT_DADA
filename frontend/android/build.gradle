@@ -6,13 +6,17 @@ buildscript {
         minSdkVersion = 16
         compileSdkVersion = 29
         targetSdkVersion = 29
+        googlePlayServicesAuthVersion = "16.0.1" 
+        ndKVersion = "21.0.6113669" // 이미지 가져오기 위해 추가
     }
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.5.3")
+        // classpath("com.android.tools.build:gradle:3.5.3")  // 이미지 가져오기 위해 주석
+        classpath 'com.android.tools.build:gradle:4.0.1' // 이미지 가져오기 위해 추가
+        classpath 'com.google.gms:google-services:4.1.0' 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -29,9 +33,9 @@ allprojects {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
         }
-
         google()
         jcenter()
+        maven { url 'https://maven.google.com' }    // 이미지 가져오기
         maven { url 'https://www.jitpack.io' }
     }
 }
