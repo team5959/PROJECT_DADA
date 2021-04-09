@@ -19,7 +19,7 @@
 ##  기능적 요구사항
 ### 핵심 기능
 
-![흐름](/uploads/b238fac2c5997e41daa4a67b30fc020c/흐름.JPG)
+<img src="/assets/DADA_flow.png" width="auto">
 
 1. 피드 만들어 주기
     1. 내부 조건에 맞는 사진들을 모아 가 피드 생성
